@@ -1,0 +1,1464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>HSE Academy — Safety Quiz Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red: #D32F2F;
+  --red-dark: #9A0007;
+  --red-light: #FF6659;
+  --yellow: #FFD600;
+  --green: #00C853;
+  --green-dark: #007B33;
+  --orange: #FF6D00;
+  --blue: #448AFF;
+  --purple: #7C4DFF;
+  --bg: #0A0A0A;
+  --bg2: #111111;
+  --bg3: #1A1A1A;
+  --bg4: #222222;
+  --border: #2A2A2A;
+  --text: #F0F0F0;
+  --text2: #999;
+  --text3: #555;
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-height:100vh;overflow-x:hidden;overscroll-behavior:none}
+
+/* ── NOISE TEXTURE ── */
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:0.4}
+
+/* ══════════════ HOME ══════════════ */
+#screen-home{position:relative;min-height:100vh;display:flex;flex-direction:column}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%, rgba(211,47,47,0.18) 0%, transparent 70%);z-index:0}
+.diagonal-stripe{position:absolute;top:0;right:0;width:40%;height:100%;background:repeating-linear-gradient(135deg,transparent,transparent 18px,rgba(211,47,47,0.04) 18px,rgba(211,47,47,0.04) 20px);z-index:0}
+
+/* ── TOP NAV ── */
+.topnav{position:relative;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:1.2rem 2.5rem;border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:0.7rem}
+.logo-icon{width:36px;height:36px;background:var(--red);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+.logo-text{font-family:var(--font-display);font-size:1.5rem;letter-spacing:2px;color:var(--text)}
+.logo-sub{font-size:0.65rem;color:var(--text2);font-family:var(--font-mono);letter-spacing:1px;margin-top:-2px}
+.nav-pill{background:var(--bg3);border:1px solid var(--border);border-radius:50px;padding:0.35rem 1rem;font-size:0.75rem;color:var(--text2);font-family:var(--font-mono);cursor:pointer;transition:all 0.2s}
+.nav-pill:hover{border-color:var(--red);color:var(--red-light)}
+
+/* ── HERO CONTENT ── */
+.hero-content{position:relative;z-index:5;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3rem 2rem;text-align:center}
+.hero-badge{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(211,47,47,0.15);border:1px solid rgba(211,47,47,0.4);border-radius:50px;padding:0.4rem 1rem;font-size:0.72rem;font-family:var(--font-mono);color:var(--red-light);margin-bottom:1.5rem;animation:fadeDown 0.6s ease both}
+.hero-badge .dot{width:7px;height:7px;background:var(--red);border-radius:50%;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
+.hero-title{font-family:var(--font-display);font-size:clamp(3.5rem,10vw,7rem);line-height:0.9;letter-spacing:4px;color:var(--text);margin-bottom:0.5rem;animation:fadeDown 0.7s ease 0.1s both}
+.hero-title span{color:var(--red);display:block}
+.hero-sub{font-size:1rem;color:var(--text2);max-width:520px;line-height:1.7;margin:1.2rem auto 2.5rem;animation:fadeDown 0.7s ease 0.2s both}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── STATS ROW ── */
+.stats-row{display:flex;gap:2.5rem;justify-content:center;margin-bottom:3rem;animation:fadeDown 0.8s ease 0.3s both}
+.stat-item{text-align:center}
+.stat-num{font-family:var(--font-display);font-size:2.2rem;color:var(--red-light);letter-spacing:1px}
+.stat-label{font-size:0.7rem;color:var(--text3);font-family:var(--font-mono);letter-spacing:1px;text-transform:uppercase;margin-top:-4px}
+
+/* ── CARDS ── */
+.cards-section{position:relative;z-index:5;padding:0 2rem 4rem}
+.cards-title{font-family:var(--font-display);font-size:1.8rem;letter-spacing:3px;color:var(--text2);text-align:center;margin-bottom:2rem}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;max-width:1100px;margin:0 auto}
+.lec-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:1.5rem;cursor:pointer;transition:all 0.3s;position:relative;overflow:hidden;animation:fadeUp 0.6s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.lec-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 80% 20%,rgba(211,47,47,0.08),transparent 60%);opacity:0;transition:opacity 0.3s}
+.lec-card:hover{border-color:var(--red);transform:translateY(-4px);box-shadow:0 20px 40px rgba(211,47,47,0.15)}
+.lec-card:hover::before{opacity:1}
+.card-num{font-family:var(--font-display);font-size:4rem;color:var(--bg3);position:absolute;top:-0.5rem;right:1rem;letter-spacing:2px;line-height:1;user-select:none;transition:color 0.3s}
+.lec-card:hover .card-num{color:rgba(211,47,47,0.15)}
+.card-tag{font-family:var(--font-mono);font-size:0.65rem;color:var(--red-light);letter-spacing:1px;text-transform:uppercase;margin-bottom:0.6rem}
+.card-title{font-size:1rem;font-weight:700;color:var(--text);margin-bottom:0.4rem;line-height:1.3}
+.card-desc{font-size:0.78rem;color:var(--text2);line-height:1.5;margin-bottom:1.2rem}
+.card-meta{display:flex;gap:0.6rem;flex-wrap:wrap}
+.meta-chip{background:var(--bg3);border:1px solid var(--border);border-radius:50px;padding:0.2rem 0.7rem;font-size:0.65rem;font-family:var(--font-mono);color:var(--text3)}
+.meta-chip.qs{color:var(--yellow)}
+.meta-chip.best{color:var(--green)}
+.card-arrow{position:absolute;bottom:1.2rem;right:1.2rem;width:32px;height:32px;background:var(--bg3);border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.85rem;transition:all 0.3s;color:var(--text2)}
+.lec-card:hover .card-arrow{background:var(--red);border-color:var(--red);color:#fff;transform:rotate(45deg)}
+
+/* ══════════════ LEVEL SELECT ══════════════ */
+#screen-level{display:none;min-height:100vh;flex-direction:column}
+.screen-header{padding:1.5rem 2.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:1rem;flex-shrink:0}
+.back-btn{width:38px;height:38px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;color:var(--text);transition:all 0.2s;flex-shrink:0;border:none}
+.back-btn:hover{background:var(--red)}
+.screen-header-info h2{font-family:var(--font-display);font-size:1.5rem;letter-spacing:2px}
+.screen-header-info p{font-size:0.75rem;color:var(--text2);font-family:var(--font-mono)}
+.level-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem}
+.level-title{font-family:var(--font-display);font-size:3rem;letter-spacing:3px;text-align:center;margin-bottom:0.5rem}
+.level-subtitle{font-size:0.85rem;color:var(--text2);text-align:center;margin-bottom:2rem}
+
+/* Mode toggle */
+.mode-toggle{display:flex;gap:0.5rem;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:0.4rem;margin-bottom:2rem}
+.mode-btn{padding:0.5rem 1.2rem;border-radius:8px;font-family:var(--font-mono);font-size:0.72rem;letter-spacing:1px;cursor:pointer;transition:all 0.2s;border:none;color:var(--text2);background:transparent}
+.mode-btn.active{background:var(--red);color:#fff}
+
+.levels-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;max-width:720px;width:100%}
+.level-btn{background:var(--bg2);border:2px solid var(--border);border-radius:16px;padding:1.8rem 1.2rem;cursor:pointer;text-align:center;transition:all 0.3s;position:relative;overflow:hidden}
+.level-btn:hover{transform:translateY(-6px)}
+.level-btn.easy:hover{border-color:var(--green);box-shadow:0 15px 35px rgba(0,200,83,0.2)}
+.level-btn.medium:hover{border-color:var(--yellow);box-shadow:0 15px 35px rgba(255,214,0,0.2)}
+.level-btn.hard:hover{border-color:var(--red);box-shadow:0 15px 35px rgba(211,47,47,0.2)}
+.level-icon{font-size:2.5rem;margin-bottom:0.8rem;display:block}
+.level-name{font-family:var(--font-display);font-size:1.5rem;letter-spacing:2px;margin-bottom:0.4rem}
+.level-btn.easy .level-name{color:var(--green)}
+.level-btn.medium .level-name{color:var(--yellow)}
+.level-btn.hard .level-name{color:var(--red-light)}
+.level-desc{font-size:0.72rem;color:var(--text2);line-height:1.5}
+.level-count{font-family:var(--font-mono);font-size:0.65rem;margin-top:0.6rem;padding:0.2rem 0.6rem;border-radius:50px;display:inline-block}
+.level-btn.easy .level-count{background:rgba(0,200,83,0.1);color:var(--green)}
+.level-btn.medium .level-count{background:rgba(255,214,0,0.1);color:var(--yellow)}
+.level-btn.hard .level-count{background:rgba(211,47,47,0.1);color:var(--red-light)}
+.level-best{font-family:var(--font-mono);font-size:0.6rem;margin-top:0.4rem;color:var(--text3)}
+
+/* ══════════════ QUIZ SCREEN ══════════════ */
+#screen-quiz{display:none;min-height:100vh;flex-direction:column}
+.quiz-topbar{padding:1rem 2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:1rem;flex-shrink:0}
+.quiz-info{flex:1;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.quiz-lec-label{font-family:var(--font-mono);font-size:0.7rem;color:var(--red-light);letter-spacing:1px}
+.quiz-level-badge{padding:0.2rem 0.7rem;border-radius:50px;font-size:0.65rem;font-family:var(--font-mono);font-weight:600}
+.mode-badge{padding:0.2rem 0.7rem;border-radius:50px;font-size:0.65rem;font-family:var(--font-mono);font-weight:600;background:rgba(68,138,255,0.15);color:var(--blue);border:1px solid rgba(68,138,255,0.3)}
+.quiz-progress-section{padding:0.8rem 2rem;background:var(--bg2);border-bottom:1px solid var(--border);flex-shrink:0}
+.progress-info{display:flex;justify-content:space-between;margin-bottom:0.4rem;font-size:0.72rem;align-items:center}
+.progress-info .current{color:var(--text);font-weight:600}
+.progress-info .total{color:var(--text2);font-family:var(--font-mono)}
+.progress-track{background:var(--bg3);border-radius:50px;height:5px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--red-light));border-radius:50px;transition:width 0.5s cubic-bezier(.4,0,.2,1)}
+.score-live{display:flex;align-items:center;gap:1rem;flex-shrink:0}
+.score-live-item{text-align:center}
+.score-live-num{font-family:var(--font-display);font-size:1.4rem;line-height:1}
+.score-live-lbl{font-size:0.6rem;font-family:var(--font-mono);color:var(--text3);text-transform:uppercase}
+
+/* TIMER */
+.timer-wrap{display:flex;align-items:center;gap:0.5rem}
+.timer-circle{width:44px;height:44px;position:relative}
+.timer-circle svg{transform:rotate(-90deg)}
+.timer-track{fill:none;stroke:var(--bg3);stroke-width:4}
+.timer-fill{fill:none;stroke-width:4;stroke-linecap:round;transition:stroke-dashoffset 1s linear,stroke 0.3s}
+.timer-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:1rem;line-height:1}
+
+.quiz-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:1.5rem 1rem;max-width:750px;margin:0 auto;width:100%;overflow-y:auto}
+.q-card{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:2rem;margin-bottom:1rem}
+.q-category{font-family:var(--font-mono);font-size:0.65rem;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:0.8rem}
+.q-text{font-size:1.05rem;font-weight:600;color:var(--text);line-height:1.6}
+.options-grid{width:100%;display:flex;flex-direction:column;gap:0.6rem}
+.opt-btn{width:100%;background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;padding:0.9rem 1.2rem;cursor:pointer;text-align:left;font-size:0.88rem;color:var(--text);font-family:var(--font-body);transition:all 0.2s;display:flex;align-items:center;gap:0.8rem}
+.opt-letter{width:26px;height:26px;border-radius:7px;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:0.7rem;font-weight:600;flex-shrink:0;transition:all 0.2s}
+.opt-btn:hover:not(.locked){border-color:rgba(211,47,47,0.5);background:rgba(211,47,47,0.06)}
+.opt-btn:hover:not(.locked) .opt-letter{background:var(--red);border-color:var(--red);color:#fff}
+.opt-btn.correct{border-color:var(--green);background:rgba(0,200,83,0.08)}
+.opt-btn.correct .opt-letter{background:var(--green);border-color:var(--green);color:#fff}
+.opt-btn.wrong{border-color:var(--red);background:rgba(211,47,47,0.08)}
+.opt-btn.wrong .opt-letter{background:var(--red);border-color:var(--red);color:#fff}
+.opt-btn.show-ans{border-color:var(--green);background:rgba(0,200,83,0.06)}
+.opt-btn.show-ans .opt-letter{background:var(--green);border-color:var(--green);color:#fff}
+.opt-btn.locked{cursor:default}
+.explain-box{width:100%;background:var(--bg3);border:1px solid var(--border);border-left:3px solid var(--green);border-radius:12px;padding:1rem 1.2rem;font-size:0.82rem;color:var(--text2);line-height:1.6;display:none;animation:fadeUp 0.3s ease}
+.explain-box.show{display:block}
+.explain-box .ex-label{font-family:var(--font-mono);font-size:0.65rem;color:var(--green);letter-spacing:1px;margin-bottom:0.4rem}
+.next-btn{margin-top:0.8rem;width:100%;padding:0.9rem;background:var(--red);border:none;border-radius:12px;color:#fff;font-family:var(--font-display);font-size:1.1rem;letter-spacing:2px;cursor:pointer;transition:all 0.2s;display:none}
+.next-btn:hover{background:var(--red-dark);transform:translateY(-2px)}
+.next-btn.show{display:block}
+
+/* ── STUDY MODE ── */
+.flashcard-wrap{width:100%;perspective:1000px;margin-bottom:1rem;cursor:pointer}
+.flashcard{width:100%;min-height:220px;position:relative;transform-style:preserve-3d;transition:transform 0.6s cubic-bezier(.4,0,.2,1)}
+.flashcard.flipped{transform:rotateY(180deg)}
+.flashcard-front,.flashcard-back{position:absolute;inset:0;backface-visibility:hidden;border-radius:20px;padding:2rem;display:flex;flex-direction:column;justify-content:center}
+.flashcard-front{background:var(--bg2);border:1px solid var(--border)}
+.flashcard-back{background:var(--bg3);border:1px solid rgba(0,200,83,0.3);transform:rotateY(180deg)}
+.fc-label{font-family:var(--font-mono);font-size:0.65rem;letter-spacing:1px;margin-bottom:1rem;text-transform:uppercase}
+.fc-q{font-size:1.05rem;font-weight:600;color:var(--text);line-height:1.6}
+.fc-a{font-size:0.9rem;color:var(--text2);line-height:1.6}
+.fc-hint{font-size:0.72rem;color:var(--text3);margin-top:1.5rem;font-family:var(--font-mono)}
+.fc-nav{display:flex;gap:0.8rem;margin-top:0.8rem;width:100%}
+.fc-btn{flex:1;padding:0.8rem;border:1.5px solid var(--border);border-radius:12px;background:var(--bg2);color:var(--text2);font-family:var(--font-display);font-size:0.95rem;letter-spacing:1px;cursor:pointer;transition:all 0.2s}
+.fc-btn.know{border-color:var(--green);color:var(--green)}
+.fc-btn.know:hover{background:rgba(0,200,83,0.1)}
+.fc-btn.skip{border-color:var(--text3)}
+.fc-btn.skip:hover{border-color:var(--text2)}
+.fc-counter{width:100%;text-align:center;font-family:var(--font-mono);font-size:0.72rem;color:var(--text3);margin-bottom:0.5rem}
+
+/* ══════════════ REVIEW SCREEN ══════════════ */
+#screen-review{display:none;min-height:100vh;flex-direction:column}
+.review-body{flex:1;padding:1.5rem;max-width:750px;margin:0 auto;width:100%}
+.review-q{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:1.2rem;margin-bottom:0.8rem;animation:fadeUp 0.3s ease both}
+.review-q-text{font-size:0.9rem;font-weight:600;color:var(--text);margin-bottom:0.8rem;line-height:1.5}
+.review-opts{display:flex;flex-direction:column;gap:0.4rem}
+.review-opt{padding:0.5rem 0.8rem;border-radius:8px;font-size:0.8rem;display:flex;align-items:center;gap:0.6rem;border:1px solid transparent}
+.review-opt.correct-ans{background:rgba(0,200,83,0.08);border-color:var(--green);color:var(--green)}
+.review-opt.user-wrong{background:rgba(211,47,47,0.08);border-color:var(--red);color:var(--red-light)}
+.review-opt.plain{color:var(--text3)}
+.review-tag{font-family:var(--font-mono);font-size:0.6rem;margin-bottom:0.4rem}
+.review-tag.tag-correct{color:var(--green)}
+.review-tag.tag-wrong{color:var(--red-light)}
+.review-tag.tag-skipped{color:var(--yellow)}
+.review-explain{margin-top:0.6rem;font-size:0.78rem;color:var(--text2);line-height:1.5;padding:0.6rem 0.8rem;background:var(--bg3);border-radius:8px;border-left:2px solid var(--green)}
+
+/* ══════════════ HISTORY SCREEN ══════════════ */
+#screen-history{display:none;min-height:100vh;flex-direction:column}
+.history-body{flex:1;padding:1.5rem;max-width:900px;margin:0 auto;width:100%}
+.history-empty{text-align:center;padding:4rem 2rem;color:var(--text3);font-size:0.9rem}
+.history-lec-block{margin-bottom:2rem}
+.history-lec-name{font-family:var(--font-display);font-size:1.2rem;letter-spacing:2px;color:var(--red-light);margin-bottom:0.8rem;border-bottom:1px solid var(--border);padding-bottom:0.5rem}
+.history-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0.6rem}
+.history-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1rem;position:relative;overflow:hidden}
+.history-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.history-card.easy::before{background:var(--green)}
+.history-card.medium::before{background:var(--yellow)}
+.history-card.hard::before{background:var(--red-light)}
+.history-level{font-family:var(--font-mono);font-size:0.65rem;letter-spacing:1px;text-transform:uppercase;margin-bottom:0.4rem}
+.history-card.easy .history-level{color:var(--green)}
+.history-card.medium .history-level{color:var(--yellow)}
+.history-card.hard .history-level{color:var(--red-light)}
+.history-score-big{font-family:var(--font-display);font-size:2.2rem;line-height:1}
+.history-frac{font-size:0.75rem;color:var(--text2);font-family:var(--font-mono)}
+.history-date{font-size:0.65rem;color:var(--text3);font-family:var(--font-mono);margin-top:0.4rem}
+.history-mode-tag{font-size:0.6rem;font-family:var(--font-mono);background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:0.1rem 0.4rem;display:inline-block;margin-top:0.3rem}
+
+/* ══════════════ RESULTS SCREEN ══════════════ */
+#screen-result{display:none;min-height:100vh;flex-direction:column;align-items:center;justify-content:center;padding:2rem}
+.result-wrap{width:100%;max-width:680px;text-align:center}
+.result-ring-wrap{position:relative;width:160px;height:160px;margin:0 auto 1.5rem}
+.result-ring-wrap svg{transform:rotate(-90deg)}
+.ring-bg{fill:none;stroke:var(--bg3);stroke-width:10}
+.ring-fill{fill:none;stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1)}
+.ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring-pct{font-family:var(--font-display);font-size:2.8rem;line-height:1}
+.ring-label{font-size:0.65rem;font-family:var(--font-mono);color:var(--text2)}
+.result-grade{font-family:var(--font-display);font-size:1.3rem;letter-spacing:3px;margin-bottom:0.4rem}
+.result-msg{font-size:0.88rem;color:var(--text2);margin-bottom:1.5rem;max-width:400px;margin-left:auto;margin-right:auto}
+.result-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0.8rem;margin-bottom:1.5rem}
+.rs-box{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:0.8rem}
+.rs-num{font-family:var(--font-display);font-size:1.8rem;line-height:1}
+.rs-lbl{font-size:0.6rem;font-family:var(--font-mono);color:var(--text3);margin-top:2px}
+.result-btns{display:flex;gap:0.8rem;justify-content:center;flex-wrap:wrap;margin-bottom:1rem}
+.rbtn{padding:0.7rem 1.5rem;border-radius:10px;font-family:var(--font-display);font-size:1rem;letter-spacing:2px;cursor:pointer;border:none;transition:all 0.2s}
+.rbtn-primary{background:var(--red);color:#fff}
+.rbtn-primary:hover{background:var(--red-dark)}
+.rbtn-secondary{background:var(--bg3);color:var(--text);border:1px solid var(--border)}
+.rbtn-secondary:hover{border-color:var(--text2)}
+.rbtn-review{background:rgba(68,138,255,0.15);color:var(--blue);border:1px solid rgba(68,138,255,0.3)}
+.rbtn-review:hover{background:rgba(68,138,255,0.25)}
+
+/* Timed mode timeout warning */
+.timeout-flash{animation:flashRed 0.5s ease 3}
+@keyframes flashRed{0%,100%{background:var(--bg2)}50%{background:rgba(211,47,47,0.15)}}
+
+/* New best badge */
+.new-best-badge{display:inline-flex;align-items:center;gap:0.4rem;background:rgba(0,200,83,0.15);border:1px solid rgba(0,200,83,0.4);border-radius:50px;padding:0.3rem 0.8rem;font-family:var(--font-mono);font-size:0.7rem;color:var(--green);margin-bottom:1rem;animation:fadeDown 0.5s ease}
+.new-best-badge.hidden{display:none}
+
+/* Confetti canvas */
+#confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:100}
+
+/* Toast */
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(100px);background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:0.7rem 1.2rem;font-size:0.8rem;font-family:var(--font-mono);z-index:200;transition:transform 0.3s cubic-bezier(.4,0,.2,1);white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* ── DECO ── */
+.helmet-deco{position:fixed;bottom:-30px;right:-30px;width:220px;height:220px;opacity:0.04;pointer-events:none;z-index:0;font-size:13rem;line-height:1}
+
+/* ══════════════ RESPONSIVE ══════════════ */
+@media(max-width:600px){
+  .topnav{padding:1rem 1.2rem}
+  .hero-title{font-size:3.5rem}
+  .stats-row{gap:1.5rem}
+  .cards-section{padding:0 1rem 3rem}
+  .levels-grid{grid-template-columns:1fr;max-width:320px}
+  .level-body{padding:1.5rem 1rem}
+  .quiz-body{padding:1rem 0.8rem}
+  .result-stats{grid-template-columns:repeat(2,1fr);gap:0.6rem}
+  .screen-header{padding:1rem 1.2rem}
+  .quiz-topbar{padding:0.8rem 1rem}
+  .quiz-progress-section{padding:0.6rem 1rem}
+  .result-btns{flex-direction:column}
+  .rbtn{width:100%}
+  .history-grid{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+<div class="helmet-deco">⛑</div>
+<div class="toast" id="toast"></div>
+
+<!-- ═══════════════════════ HOME ═══════════════════════ -->
+<div id="screen-home">
+  <div class="hero-bg"></div>
+  <div class="diagonal-stripe"></div>
+  <nav class="topnav">
+    <div class="logo">
+      <div class="logo-icon">⛑</div>
+      <div>
+        <div class="logo-text">HSE ACADEMY</div>
+        <div class="logo-sub">SAFETY · HEALTH · ENVIRONMENT</div>
+      </div>
+    </div>
+    <div class="nav-pill" onclick="showHistory()">📊 MY SCORES</div>
+  </nav>
+  <div class="hero-content">
+    <div class="hero-badge"><span class="dot"></span>INTERACTIVE QUIZ PLATFORM</div>
+    <div class="hero-title">SAFETY<span>MATTERS</span></div>
+    <p class="hero-sub">Master Occupational Health, Safety & Environment through structured quiz sessions. Choose your lecture and difficulty level to begin.</p>
+    <div class="stats-row">
+      <div class="stat-item"><div class="stat-num">6</div><div class="stat-label">Lectures</div></div>
+      <div class="stat-item"><div class="stat-num">300+</div><div class="stat-label">Questions</div></div>
+      <div class="stat-item"><div class="stat-num">3</div><div class="stat-label">Difficulty Levels</div></div>
+    </div>
+  </div>
+  <div class="cards-section">
+    <div class="cards-title">— SELECT A LECTURE —</div>
+    <div class="cards-grid" id="cards-grid"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ LEVEL SELECT ═══════════════════════ -->
+<div id="screen-level">
+  <div class="screen-header">
+    <button class="back-btn" onclick="showHome()">←</button>
+    <div class="screen-header-info">
+      <h2 id="level-lec-title">Lecture 1</h2>
+      <p id="level-lec-sub">HSE Definition & Risk Assessment</p>
+    </div>
+  </div>
+  <div class="level-body">
+    <div class="level-title">CHOOSE MODE</div>
+    <div class="level-subtitle">Select a mode and difficulty level to begin</div>
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="mode-quiz" onclick="selectMode('quiz')">⚡ QUIZ</button>
+      <button class="mode-btn" id="mode-timed" onclick="selectMode('timed')">⏱ TIMED</button>
+      <button class="mode-btn" id="mode-study" onclick="selectMode('study')">📖 STUDY</button>
+    </div>
+    <div class="levels-grid">
+      <div class="level-btn easy" onclick="startSession('easy')">
+        <span class="level-icon">🟢</span>
+        <div class="level-name">EASY</div>
+        <div class="level-desc">Core definitions and basic concepts.</div>
+        <div class="level-count" id="lc-easy">17 Questions</div>
+        <div class="level-best" id="lb-easy"></div>
+      </div>
+      <div class="level-btn medium" onclick="startSession('medium')">
+        <span class="level-icon">🟡</span>
+        <div class="level-name">MEDIUM</div>
+        <div class="level-desc">Application and understanding.</div>
+        <div class="level-count" id="lc-medium">17 Questions</div>
+        <div class="level-best" id="lb-medium"></div>
+      </div>
+      <div class="level-btn hard" onclick="startSession('hard')">
+        <span class="level-icon">🔴</span>
+        <div class="level-name">HARD</div>
+        <div class="level-desc">Exam-style scenario questions.</div>
+        <div class="level-count" id="lc-hard">16 Questions</div>
+        <div class="level-best" id="lb-hard"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ QUIZ SCREEN ═══════════════════════ -->
+<div id="screen-quiz">
+  <div class="quiz-topbar">
+    <button class="back-btn" onclick="confirmBack()">←</button>
+    <div class="quiz-info">
+      <span class="quiz-lec-label" id="quiz-lec-label">LECTURE 1</span>
+      <span class="quiz-level-badge" id="quiz-level-badge">EASY</span>
+      <span class="mode-badge" id="quiz-mode-badge" style="display:none">TIMED</span>
+    </div>
+    <div class="quiz-info" id="timer-area" style="display:none">
+      <div class="timer-wrap">
+        <div class="timer-circle">
+          <svg width="44" height="44" viewBox="0 0 44 44">
+            <circle class="timer-track" cx="22" cy="22" r="18"/>
+            <circle class="timer-fill" id="timer-fill" cx="22" cy="22" r="18" stroke-dasharray="113" stroke-dashoffset="0" stroke="#FFD600"/>
+          </svg>
+          <div class="timer-num" id="timer-num">30</div>
+        </div>
+      </div>
+    </div>
+    <div class="score-live">
+      <div class="score-live-item"><div class="score-live-num" id="live-correct" style="color:var(--green)">0</div><div class="score-live-lbl">Correct</div></div>
+      <div class="score-live-item"><div class="score-live-num" id="live-wrong" style="color:var(--red)">0</div><div class="score-live-lbl">Wrong</div></div>
+    </div>
+  </div>
+  <div class="quiz-progress-section">
+    <div class="progress-info">
+      <span class="current" id="progress-text">Question 1</span>
+      <span class="total" id="progress-total">of 17</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  </div>
+  <div class="quiz-body" id="quiz-body"></div>
+</div>
+
+<!-- ═══════════════════════ RESULT SCREEN ═══════════════════════ -->
+<div id="screen-result">
+  <div class="result-wrap">
+    <div class="new-best-badge hidden" id="new-best-badge">🏆 NEW BEST SCORE!</div>
+    <div class="result-ring-wrap">
+      <svg width="160" height="160" viewBox="0 0 160 160">
+        <circle class="ring-bg" cx="80" cy="80" r="68"/>
+        <circle class="ring-fill" id="ring-fill" cx="80" cy="80" r="68" stroke-dasharray="427" stroke-dashoffset="427"/>
+      </svg>
+      <div class="ring-center">
+        <div class="ring-pct" id="res-pct">0%</div>
+        <div class="ring-label" id="res-score">0/0</div>
+      </div>
+    </div>
+    <div class="result-grade" id="res-grade">EXCELLENT</div>
+    <div class="result-msg" id="res-msg">Outstanding performance!</div>
+    <div class="result-stats">
+      <div class="rs-box"><div class="rs-num" id="rs-correct" style="color:var(--green)">0</div><div class="rs-lbl">Correct</div></div>
+      <div class="rs-box"><div class="rs-num" id="rs-wrong" style="color:var(--red)">0</div><div class="rs-lbl">Wrong</div></div>
+      <div class="rs-box"><div class="rs-num" id="rs-skipped" style="color:var(--yellow)">0</div><div class="rs-lbl">Timed Out</div></div>
+      <div class="rs-box"><div class="rs-num" id="rs-total" style="color:var(--text2)">0</div><div class="rs-lbl">Total</div></div>
+    </div>
+    <div class="result-btns">
+      <button class="rbtn rbtn-primary" onclick="retryQuiz()">↺ RETRY</button>
+      <button class="rbtn rbtn-review" onclick="showReview()">📋 REVIEW</button>
+      <button class="rbtn rbtn-secondary" onclick="showLevel()">CHANGE LEVEL</button>
+      <button class="rbtn rbtn-secondary" onclick="showHome()">HOME</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ REVIEW SCREEN ═══════════════════════ -->
+<div id="screen-review">
+  <div class="screen-header">
+    <button class="back-btn" onclick="showScreen('screen-result')">←</button>
+    <div class="screen-header-info">
+      <h2>ANSWER REVIEW</h2>
+      <p id="review-sub">All questions with explanations</p>
+    </div>
+  </div>
+  <div class="review-body" id="review-body"></div>
+</div>
+
+<!-- ═══════════════════════ HISTORY SCREEN ═══════════════════════ -->
+<div id="screen-history">
+  <div class="screen-header">
+    <button class="back-btn" onclick="showHome()">←</button>
+    <div class="screen-header-info">
+      <h2>MY SCORES</h2>
+      <p>Personal performance history</p>
+    </div>
+    <button class="back-btn" onclick="clearHistory()" style="margin-left:auto;font-size:0.7rem;width:auto;padding:0.4rem 0.8rem;font-family:var(--font-mono)">CLEAR ALL</button>
+  </div>
+  <div class="history-body" id="history-body"></div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════
+//  DATA
+// ══════════════════════════════════════════════════
+const LECTURES_DATA = [
+  {
+    id:0, tag:"LECTURE 01", title:"HSE Definition & Risk Assessment",
+    desc:"Foundations of occupational safety, the 3 commitments, risk matrix & controls.",
+    topics:["HSE Definition","3 Commitments","Risk Assessment","Hierarchy of Controls","Emergency Response"],
+    questions:{
+      easy:[
+        {q:"What does HSE stand for?",opts:["Health, Safety & Environment","Hazard, Security & Equipment","Health, Security & Engineering","Hazard, Safety & Equipment"],a:0,e:"HSE = Health, Safety & Environment."},
+        {q:"How many main objectives does HSE have?",opts:["One","Two","Three","Four"],a:1,e:"HSE has two main objectives: maintaining human safety/health and providing a safe work environment."},
+        {q:"HSE protects which three things?",opts:["People, property & environment","Money, machines & people","Law, finance & environment","People, profit & property"],a:0,e:"HSE aims to protect People, Property, and the Environment from injury and damage."},
+        {q:"The Egyptian Labor Law that mandates workplace safety is:",opts:["Law No. 12 of 2003","Law No. 14 of 2025","Law No. 8 of 2018","Law No. 5 of 2010"],a:1,e:"Egyptian Labor Law No. 14 of 2025 requires employers to provide a safe work environment for all workers."},
+        {q:"How many reasons are there to comply with HSE?",opts:["2","3","4","5"],a:1,e:"Three reasons: Legal, Ethical, and Financial commitments."},
+        {q:"The ethical reason for HSE compliance is based on:",opts:["Financial savings","Government pressure","All religions emphasize preserving human life","International standards only"],a:2,e:"The ethical obligation: no religion or culture on Earth neglects the importance of preserving human life."},
+        {q:"Risk Score is calculated by:",opts:["Severity + Probability","Severity × Probability","Severity − Probability","Severity ÷ Probability"],a:1,e:"Risk Score = Severity (S) × Probability (P)."},
+        {q:"How many components does a Risk Assessment have?",opts:["3","4","5","6"],a:2,e:"Risk Assessment has 5 components in order."},
+        {q:"The FIRST step in Risk Assessment is:",opts:["Evaluate severity","Identify control measures","Identify task/workplace/equipment","Determine consequences"],a:2,e:"Step 1: Identify the specific task, workplace, or equipment requiring assessment."},
+        {q:"Which control in the hierarchy is MOST effective?",opts:["PPE","Administrative","Engineering","Elimination"],a:3,e:"Elimination (physically removing the hazard) is the most effective control measure."},
+        {q:"PPE is the _____ effective control measure:",opts:["Most","Second most","Third most","Least"],a:3,e:"PPE is the LEAST effective control — it protects the worker but does not remove the hazard itself."},
+        {q:"A severity of 5 (Catastrophic) corresponds to:",opts:["First aid case","Lost workday","Medical treatment","Single or multiple fatalities"],a:3,e:"Severity 5 = Catastrophic = single or multiple fatalities."},
+        {q:"An acceptable risk score range is:",opts:["4–10","11–16","17–25","1–3"],a:3,e:"Score 1–3 = Acceptable (risk can be accepted). Monitor to ensure level doesn't change."},
+        {q:"During evacuation, you should go to the:",opts:["Cafeteria","Parking lot","Assembly Point","Main office"],a:2,e:"Always go to the designated Assembly Point and wait for instructions."},
+        {q:"During evacuation, should you run?",opts:["Yes, run fast","No, move carefully and do not run","Only if there's fire","Only if told to"],a:1,e:"Do NOT run during evacuation — move carefully and in an organized manner."},
+        {q:"Who authorizes your return to an evacuated area?",opts:["Your manager","Any security guard","The site incident coordinator","Yourself"],a:2,e:"ONLY the site incident coordinator can authorize return to an evacuated area."},
+        {q:"The financial reason for HSE compliance is to:",opts:["Pay employee salaries","Avoid costs resulting from accidents","Buy safety equipment","Pay insurance only"],a:1,e:"The financial commitment means complying with HSE to avoid the costs resulting from accidents."},
+      ],
+      medium:[
+        {q:"A risk score of 20 requires:",opts:["No action needed","Review within 30 days","STOP operation immediately","Continue with caution"],a:2,e:"Score 17–25 = Unacceptable. The operation must STOP and controls reviewed immediately."},
+        {q:"High risk (score 11–16) must be reviewed within:",opts:["24 hours","7 days","30 days","60 days"],a:1,e:"High risk requires additional controls and review within 7 days."},
+        {q:"Limited risk (score 4–10) requires review within:",opts:["24 hours","7 days","30 days","90 days"],a:2,e:"Limited risk = Take remedial action at appropriate time, review within 30 days."},
+        {q:"A probability of 3 corresponds to which process frequency?",opts:["Continuous","Daily","Weekly","Monthly"],a:2,e:"Probability 3 = Occasional = Weekly process."},
+        {q:"Installing a machine guard to protect workers is an example of:",opts:["Elimination","Substitution","Engineering controls","Administrative controls"],a:2,e:"Machine guards isolate people from the hazard — Engineering Control."},
+        {q:"Replacing a toxic chemical with a safer alternative is:",opts:["Elimination","Substitution","Engineering control","PPE"],a:1,e:"Substitution = replacing the hazard with something safer."},
+        {q:"Worker rotation to limit exposure time is an example of:",opts:["Engineering control","Elimination","PPE","Administrative control"],a:3,e:"Changing how people work (rotation, time limits) is an Administrative Control."},
+        {q:"A fracture requiring medical attention is classified as a:",opts:["Minor injury","Moderate injury","Severe injury","Fatality"],a:1,e:"Moderate injuries include fractures, deep cuts, or injuries requiring medical attention."},
+        {q:"Malfunctioning equipment falls under which hazard source?",opts:["Human factors","Machines & tools","Work methods","Materials"],a:1,e:"Malfunctioning equipment, sharp edges, and moving parts are Machines & Tools hazards."},
+        {q:"Poor ergonomics and unsafe procedures are classified as:",opts:["Human factors","Material hazards","Work method hazards","Mechanical hazards"],a:2,e:"Work method hazards include unsafe procedures, poor ergonomics, and improper handling."},
+        {q:"Production downtime is best classified as:",opts:["A hazard source","A consequence of hazards","A control measure","A probability level"],a:1,e:"Production downtime is one of the possible consequences resulting from a hazard."},
+        {q:"Assisting someone during evacuation is allowed when:",opts:["Always, regardless of risk","Never","Only if it does not put your own safety at risk","Only with manager permission"],a:2,e:"You may help others ONLY if it does not put your own safety at risk."},
+        {q:"An environmental issue is significant when the score is:",opts:["≥1","≥2","≥4","≥10"],a:2,e:"Environmental issues shall be any score ≥4 or breach of legislative requirements."},
+        {q:"Step 4 in evacuation is:",opts:["Leave belongings","Assemble at assembly point","Shut down equipment safely then leave","Do not return until authorized"],a:2,e:"Step 4: Shut down any machine or equipment safely before leaving."},
+        {q:"What is the maximum possible risk score?",opts:["10","20","25","30"],a:2,e:"Maximum score = Severity 5 × Probability 5 = 25."},
+        {q:"A near miss is assigned severity level:",opts:["5 – Catastrophic","3 – Critical","2 – Moderate","1 – Negligible"],a:3,e:"Near miss/first aid case = Severity 1 (Negligible)."},
+        {q:"Which is NOT a hazard source in Risk Assessment?",opts:["Human factors","Materials","Budget constraints","Machines & tools"],a:2,e:"The 4 sources are: Human factors, Machines & tools, Work methods, Materials. Budget is not one."},
+      ],
+      hard:[
+        {q:"A task is performed weekly and has a catastrophic severity. What is the risk score and action?",opts:["Score 15 — review in 7 days","Score 20 — STOP immediately","Score 25 — STOP immediately","Score 10 — review in 30 days"],a:0,e:"Weekly = P3, Catastrophic = S5. Score = 3×5 = 15. Score 11–16 = High risk, review within 7 days."},
+        {q:"An organization eliminates a chemical hazard by banning that chemical entirely. Which control was used?",opts:["Substitution","Engineering control","Elimination","Administrative control"],a:2,e:"Banning/removing the hazard entirely = Elimination — the most effective control."},
+        {q:"A daily process (P=4) with moderate severity (S=2). Score and classification?",opts:["Score 8 — Limited risk","Score 6 — Limited risk","Score 12 — High risk","Score 4 — Acceptable"],a:0,e:"Daily = P4, Moderate = S2. Score = 4×2 = 8. Score 4–10 = Limited risk."},
+        {q:"During evacuation, you notice a colleague is missing. You should:",opts:["Search for them alone immediately","Leave without reporting","Immediately inform the site incident coordinator","Wait 30 minutes then report"],a:2,e:"If you suspect someone is missing, IMMEDIATELY inform the site incident coordinator."},
+        {q:"If 5 levels of controls exist, which TWO are considered 'significant' levels in the guide to rankings?",opts:["Unacceptable and High","High and Limited","Acceptable and High","Unacceptable and Limited"],a:0,e:"Significant levels = Unacceptable (17–25) and High (11–16). Both require urgent action."},
+        {q:"A worker loses 3 workdays due to an injury. The severity classification is:",opts:["Catastrophic (5)","Major (4)","Critical (3)","Moderate (2)"],a:2,e:"Lost Workday Case (LWC) = severity 3 (Critical)."},
+        {q:"Replacing manual lifting with a mechanical lifting device is:",opts:["Elimination — removing the hazard","Substitution — replacing with safer method","Engineering control — isolating people","Administrative control"],a:2,e:"A mechanical device isolates the human from the manual handling hazard = Engineering control."},
+        {q:"If an organization installs warning signs and rotates staff away from a noisy machine, these are:",opts:["Engineering and elimination","Administrative controls only","Engineering only","Both administrative controls"],a:3,e:"Warning signs and staff rotation are both Administrative controls."},
+        {q:"Which combination correctly orders the hierarchy from most to least effective?",opts:["PPE → Admin → Engineering → Sub → Elimination","Elimination → Sub → Engineering → Admin → PPE","Engineering → Elimination → Admin → Sub → PPE","Admin → Engineering → Sub → Elimination → PPE"],a:1,e:"Correct order (most→least): Elimination → Substitution → Engineering Controls → Administrative Controls → PPE."},
+        {q:"A monthly process has probability score 2. A major injury (S=4) is possible. Score and action?",opts:["Score 8 — Limited risk, review in 30 days","Score 12 — High risk, review in 7 days","Score 6 — Limited risk","Score 16 — High risk, review in 7 days"],a:0,e:"Monthly = P2, Major = S4. Score = 2×4 = 8. Score 4–10 = Limited risk, review within 30 days."},
+        {q:"An HSE audit finds an environmental impact on site immediately contained. Severity level?",opts:["5 – Catastrophic","3 – Critical","2 – Moderate","1 – Negligible"],a:2,e:"Impact on site released immediately and contained = Moderate severity (2)."},
+        {q:"The legal commitment under Egyptian Law requires compliance for:",opts:["Only Egyptian nationals","All workers inside the country","Only management staff","Only industrial workers"],a:1,e:"Egyptian Labor Law No. 14 of 2025 requires safe work environment for ALL workers inside the country."},
+        {q:"Which step of Risk Assessment involves deciding whether to eliminate, substitute, or use PPE?",opts:["Step 1: Identify task","Step 2: Identify hazards","Step 3: Determine consequences","Step 5: Control measures"],a:3,e:"Step 5 is identifying and implementing control measures."},
+        {q:"A continuous process (P=5) with negligible severity (S=1). Score and action?",opts:["Score 5 — Limited risk, review in 30 days","Score 5 — Acceptable, just monitor","Score 10 — Limited risk","Score 1 — Acceptable"],a:0,e:"P5 × S1 = 5. Score 4–10 = Limited risk, take remedial action, review within 30 days."},
+        {q:"Equipment causes partial disability to a worker. The severity level is:",opts:["Catastrophic (5)","Major (4)","Critical (3)","Moderate (2)"],a:1,e:"Partial or complete incapacity = Major severity (4)."},
+        {q:"An organization uses both job rotation AND provides hearing protection for a noisy environment. The controls used are:",opts:["Two Engineering controls","Administrative + PPE","Two PPE controls","Engineering + PPE"],a:1,e:"Job rotation = Administrative control. Hearing protection = PPE. Two different levels of the hierarchy."},
+      ]
+    }
+  },
+  {
+    id:1, tag:"LECTURE 02", title:"Types of Workplace Hazards",
+    desc:"Physical, chemical, biological, ergonomic, psychosocial & mechanical hazards.",
+    topics:["Physical Hazards","Chemical Hazards","Biological Hazards","Ergonomic Hazards","Electrical Hazards","Fire Triangle"],
+    questions:{
+      easy:[
+        {q:"How many main types of workplace hazards are there?",opts:["4","5","6","7"],a:2,e:"6 types: Physical, Chemical, Biological, Ergonomic, Psychosocial, Mechanical/Equipment."},
+        {q:"Noise and vibration are examples of which hazard type?",opts:["Chemical","Biological","Physical","Ergonomic"],a:2,e:"Noise, vibration, temperature extremes, radiation, and falling objects are Physical hazards."},
+        {q:"COVID-19 and hepatitis B are examples of:",opts:["Chemical hazards","Biological hazards","Physical hazards","Ergonomic hazards"],a:1,e:"Viruses and bacteria (hepatitis, influenza, COVID-19) are Biological hazards."},
+        {q:"Workplace stress and bullying are classified as:",opts:["Physical hazards","Chemical hazards","Ergonomic hazards","Psychosocial hazards"],a:3,e:"Psychosocial hazards: stress, bullying, harassment, violence."},
+        {q:"Moving parts causing amputations is a:",opts:["Chemical hazard","Physical hazard","Mechanical/Equipment hazard","Ergonomic hazard"],a:2,e:"Moving parts risking cuts, amputations, and crushing = Mechanical/Equipment hazards."},
+        {q:"Poor posture leading to back pain is:",opts:["Physical hazard","Chemical hazard","Ergonomic hazard","Biological hazard"],a:2,e:"Poor posture is an ergonomic hazard that leads to back pain and neck strain."},
+        {q:"A fire needs how many elements to start?",opts:["2","3","4","5"],a:1,e:"The classic fire triangle has 3 elements: Fuel, Heat, and Oxygen."},
+        {q:"To extinguish a fire, you must:",opts:["Add more water","Remove ANY one element of the fire triangle","Add foam only","Increase oxygen"],a:1,e:"Removing ANY ONE element from the fire triangle will extinguish the fire."},
+        {q:"Solvents and acids are examples of:",opts:["Biological hazards","Physical hazards","Chemical hazards","Ergonomic hazards"],a:2,e:"Toxic chemicals such as solvents, acids, and alkalis are chemical hazards."},
+        {q:"Electric shock occurs from:",opts:["Poor posture","Contact with live wires or faulty circuits","Exposure to bacteria","Loud noise"],a:1,e:"Electric shock is caused by contact with live wires or faulty electrical circuits."},
+        {q:"RSI (Repetitive Strain Injury) results from:",opts:["Chemical exposure","Biological hazards","Repetitive motions — ergonomic hazard","Radiation"],a:2,e:"Ergonomic hazards from repetitive motions cause RSI."},
+        {q:"Radiation (X-rays, UV) is which hazard type?",opts:["Chemical","Biological","Physical","Ergonomic"],a:2,e:"Radiation (ionizing or non-ionizing) is a Physical hazard."},
+        {q:"Fungi and mold in the workplace cause:",opts:["Electric shock","Hearing loss","Respiratory issues and allergic reactions","Equipment breakdown"],a:2,e:"Fungi and mold are biological hazards causing respiratory issues and allergic reactions."},
+        {q:"Gasoline and alcohol are examples of:",opts:["Corrosive materials","Toxic chemicals","Flammable substances","Biological hazards"],a:2,e:"Gasoline and alcohol are flammable substances — a type of chemical hazard."},
+        {q:"Temperature extremes in the workplace cause:",opts:["Hearing loss","Heat stress, frostbite, or heatstroke","Eye strain","Chemical burns"],a:1,e:"Temperature extremes (Physical hazard) cause heat stress, frostbite, and heatstroke."},
+        {q:"Slippery floors are primarily which type of hazard?",opts:["Chemical","Biological","Ergonomic","Physical"],a:3,e:"Slippery floors are a Physical hazard — they can lead to falls and fractures."},
+        {q:"Manual handling (lifting heavy objects) is classified as:",opts:["Physical hazard","Chemical hazard","Ergonomic hazard","Electrical hazard"],a:2,e:"Manual handling is an Ergonomic hazard — lifting without assistance causes musculoskeletal injuries."},
+      ],
+      medium:[
+        {q:"A worker develops skin burns from a chemical splash. The entry route was:",opts:["Inhalation","Ingestion","Skin contact/absorption","Injection"],a:2,e:"Skin contact is the absorption route — chemicals can enter through the skin, especially through cuts."},
+        {q:"Welding smoke and silica dust are classified as:",opts:["Physical","Biological","Ergonomic","Chemical hazards (dust & fumes)"],a:3,e:"Dust and fumes like silica and welding smoke are chemical hazards."},
+        {q:"Which is a cause of electrical hazards?",opts:["Proper grounding","Wet environments near electrical equipment","Regular maintenance","Insulated tools"],a:1,e:"Wet environments near electrical equipment is a major cause of electrical hazards."},
+        {q:"Overloaded circuits can lead to:",opts:["Chemical leaks","Biological contamination","Fires","Ergonomic injury"],a:2,e:"Overloaded circuits, faulty wiring, and equipment malfunction can cause fires."},
+        {q:"Which PPE protects against electrical hazards?",opts:["Hard hat and goggles","Insulated gloves and boots","Hearing protection","High-visibility vest"],a:1,e:"Insulated tools and PPE (gloves, boots) are used to protect against electrical hazards."},
+        {q:"CO₂ extinguishers are used for:",opts:["Class A (wood/paper)","Class B (flammable liquids)","Class C (electrical fires)","Class D (metals)"],a:2,e:"CO₂ extinguishers are suited for Class C fires (electrical fires)."},
+        {q:"Water extinguishers are used for:",opts:["Electrical fires","Class A fires — ordinary combustibles like wood and paper","Chemical fires","Gas fires"],a:1,e:"Water extinguishers are for Class A fires (ordinary combustibles: wood, paper, fabric)."},
+        {q:"High workload leading to burnout is:",opts:["Physical","Ergonomic","Psychosocial","Mechanical"],a:2,e:"High workload causing fatigue, mistakes, and burnout is a Psychosocial hazard."},
+        {q:"A worker cannot fight a rapidly spreading fire because:",opts:["Only managers can use extinguishers","It endangers their life — they should evacuate","Fire extinguishers are too heavy","It is not their responsibility"],a:1,e:"Never try to fight a fire that is spreading rapidly — it puts your life at risk."},
+        {q:"Prolonged sitting or standing causes:",opts:["Burns","Circulation problems and fatigue (ergonomic)","Chemical exposure","Radiation exposure"],a:1,e:"Prolonged sitting or standing is an ergonomic hazard causing circulation problems and fatigue."},
+        {q:"Corrosive materials (strong acids/bases) are classified as:",opts:["Physical hazards","Biological hazards","Chemical hazards","Ergonomic hazards"],a:2,e:"Corrosive materials that damage skin or eyes are Chemical hazards."},
+        {q:"Proper grounding and circuit protection (fuses, breakers) prevent:",opts:["Biological hazards","Ergonomic injuries","Electrical hazards","Chemical exposure"],a:2,e:"Proper grounding and circuit protection devices are key electrical hazard prevention measures."},
+        {q:"The first action when a fire is discovered is:",opts:["Grab a fire extinguisher","Raise the alarm immediately","Run out of the building","Call your manager"],a:1,e:"Step 1 in fire response: Raise the alarm — activate the fire alarm system immediately."},
+        {q:"Prolonged exposure to high-frequency noise causes:",opts:["Immediate total hearing loss","Skin disease","Gradual accumulated hearing loss (irreversible)","Eye damage"],a:2,e:"Long-term noise exposure causes gradual, irreversible accumulated hearing damage."},
+        {q:"A worker feels dizzy from paint fumes. The exposure route was:",opts:["Skin absorption","Ingestion","Inhalation","Injection"],a:2,e:"Paint fumes are inhaled — this is the inhalation exposure route."},
+        {q:"The oxygen level in air that supports fire is approximately:",opts:["5–10%","19–21%","30–35%","50%"],a:1,e:"Oxygen in air is approximately 19–21%, which is sufficient to support combustion."},
+        {q:"Improper machine use due to lack of training is classified as:",opts:["Mechanical hazard","Physical hazard","Ergonomic hazard","Biological hazard"],a:0,e:"Improper use and lack of training increasing accidents are Mechanical/Equipment hazards."},
+      ],
+      hard:[
+        {q:"A worker develops asthma from 5 years of chemical dust exposure. This is an example of:",opts:["An immediate chemical effect","A long-term delayed chemical health effect","A biological hazard","A physical hazard only"],a:1,e:"Some chemicals require long-term exposure before health effects appear — this is a delayed chemical effect."},
+        {q:"An explosion in a paint spray room due to electrical sparks involves which hazard types?",opts:["Chemical only","Electrical only","Both chemical (flammable fumes) and electrical hazards","Biological and physical"],a:2,e:"Paint fumes are flammable (chemical hazard) + electrical spark = explosion. Both chemical and electrical hazards involved."},
+        {q:"A worker develops carpal tunnel syndrome from 2 years of keyboard use. This is:",opts:["Physical hazard outcome","Biological hazard outcome","Ergonomic hazard outcome (RSI)","Chemical hazard outcome"],a:2,e:"Carpal tunnel syndrome from repetitive keyboard use is an Ergonomic hazard outcome (RSI)."},
+        {q:"To prevent ergonomic hazards from computer use, the screen should be at:",opts:["Above eye level","Below eye level","Eye level (direct line of sight)","As far away as possible"],a:2,e:"Screen at eye level means the user looks straight ahead — reducing neck and eye strain."},
+        {q:"Which hazard type combination is involved when a worker slips on a wet floor near electrical equipment?",opts:["Ergonomic + Chemical","Physical (slippery floor) + Electrical","Biological + Mechanical","Chemical + Ergonomic"],a:1,e:"Slippery floor = Physical hazard. Wet conditions near electrical equipment = Electrical hazard."},
+        {q:"A worker is bitten by an infected mosquito at a construction site. This is:",opts:["Physical hazard","Chemical hazard","Biological hazard","Psychosocial hazard"],a:2,e:"An insect bite transmitting disease is a Biological hazard."},
+        {q:"Constant criticism, screaming, and mockery in front of peers are examples of:",opts:["Physical hazards","Psychosocial hazards (harassment/bullying)","Ergonomic hazards","Biological hazards"],a:1,e:"These behaviours describe workplace harassment/bullying — a Psychosocial hazard."},
+        {q:"A fire starts due to a gas leak near an open flame. The fire triangle elements present are:",opts:["Heat + Oxygen only","Fuel (gas) + Heat (flame) + Oxygen","Fuel + Heat only","Oxygen + Fuel only"],a:1,e:"Gas = Fuel, open flame = Heat, air = Oxygen. All 3 elements are present."},
+        {q:"Which scenario correctly identifies the hazard type and its prevention?",opts:["Noise → Elimination by using louder music","Chemical fumes → Prevention by inhalation","Slippery floor → Engineering control: install anti-slip matting","Radiation → Administrative control: ignore warning signs"],a:2,e:"Anti-slip matting isolates workers from the fall hazard — this is an Engineering control for a Physical hazard."},
+        {q:"A maintenance worker uses a poorly maintained drill on a wet floor. Identify all hazards:",opts:["Mechanical only","Mechanical (faulty equipment) + Physical (wet floor) + Electrical (wet + electric drill)","Chemical + Biological","Ergonomic only"],a:1,e:"Faulty drill = Mechanical, wet floor = Physical, wet + electrical equipment = Electrical. Three hazard types."},
+        {q:"Which is a MANAGEMENT CONTROL to reduce workplace violence?",opts:["Providing PPE","Regular equipment inspections","Training to detect early warning signs and report incidents","Increasing production targets"],a:2,e:"Training employees to recognize early warning signs and providing reporting systems are management controls."},
+        {q:"Which statement about biological hazards is CORRECT?",opts:["Only affect outdoor workers","Can cause infection through exposure to living organisms or by-products","Are always immediately visible","Only transmitted through food"],a:1,e:"Biological hazards = exposure to living organisms or their by-products that can cause infection or disease."},
+        {q:"A worker handles corrosive acid without gloves and develops a skin burn. Which was missing?",opts:["Engineering control","Elimination of the acid","PPE (protective gloves)","Administrative control"],a:2,e:"Appropriate PPE (chemical-resistant gloves) was missing — failure at the last level of the hierarchy."},
+        {q:"The difference between toxic and corrosive chemicals is:",opts:["Toxic burns skin; corrosive causes disease","Corrosive damages surfaces/skin on contact; toxic causes harm to internal organs","They are identical","Corrosive is always a gas; toxic is always liquid"],a:1,e:"Corrosive = damages skin/surfaces on contact. Toxic = causes harm to internal body systems."},
+        {q:"Which fire response action is INCORRECT?",opts:["Raise the alarm immediately","Evacuate calmly to assembly point","Open all windows to let smoke out","Match extinguisher type to fire class"],a:2,e:"Opening windows can increase oxygen supply and make the fire worse."},
+        {q:"An employee reports feeling isolated, anxious and unable to sleep due to persistent bullying. These are:",opts:["Physical injury symptoms","Symptoms of a biological illness","Psychological effects of psychosocial hazards","Chemical poisoning symptoms"],a:2,e:"Isolation, anxiety, and insomnia are psychological effects of psychosocial hazards (bullying/harassment)."},
+      ]
+    }
+  },
+  {
+    id:2, tag:"LECTURE 03", title:"Incident Investigation",
+    desc:"Incident types, investigation steps, 5 Whys root cause analysis & best practices.",
+    topics:["Incident Types","Why Investigate","Investigation Steps","5 Whys Method","Root Cause Analysis","Best Practices"],
+    questions:{
+      easy:[
+        {q:"An 'incident' is:",opts:["Always results in injury","An unplanned event with potential to cause harm","A planned safety drill","Always causes property damage"],a:1,e:"An incident is an unplanned or undesired event that has the POTENTIAL to result in harm."},
+        {q:"An 'accident' results in:",opts:["Potential harm only","No harm at all","Actual injury, illness, damage, or loss","Only property damage"],a:2,e:"An accident is an unplanned event that RESULTS IN actual injury, illness, damage, or loss."},
+        {q:"A 'near miss' means:",opts:["An event that caused major injuries","Potential harm existed but no actual harm occurred","A type of accident","A planned near-collision drill"],a:1,e:"Near miss = no actual harm occurred, but the potential for harm was present."},
+        {q:"Why do we investigate incidents?",opts:["To punish workers","To close the case quickly","To prevent recurrence","To avoid media attention"],a:2,e:"The primary reason for investigation is to prevent recurrence by understanding root causes."},
+        {q:"What is the FIRST step in an incident investigation?",opts:["Collect evidence","Analyze causes","Secure the scene","Report findings"],a:2,e:"Step 1: SECURE THE SCENE to preserve evidence and prevent further harm."},
+        {q:"The '5 Whys' method is used to:",opts:["Count accident victims","Identify the root cause","Write the investigation report","Evacuate the site"],a:1,e:"The 5 Whys technique identifies root causes by asking 'Why?' repeatedly."},
+        {q:"How many times is 'Why?' asked in the 5 Whys method?",opts:["3","4","Typically 5","10"],a:2,e:"The 5 Whys method typically asks 'Why?' five times to reach the root cause."},
+        {q:"Which is a best practice in investigation?",opts:["Blame the worker","Stop after the first why","Focus on system failures","Keep findings secret"],a:2,e:"Best practice: focus on system failures, be honest, avoid blaming individuals."},
+        {q:"What is the LAST step in investigation?",opts:["Secure the scene","Collect evidence","Report findings","Follow up"],a:3,e:"The 5 steps end with Follow up — ensuring corrective actions were implemented."},
+        {q:"Data collection includes which of the following?",opts:["Worker salary data","Photos of the scene","Competitor analysis","Financial reports"],a:1,e:"Data collection: photos, witness statements, documents, and environmental conditions."},
+        {q:"Blaming people instead of processes is a:",opts:["Best practice","Investigation data source","Common investigation mistake","Corrective action"],a:2,e:"Blaming individuals instead of processes is a common mistake that masks system failures."},
+        {q:"Accident investigation is a _____ process:",opts:["Random","Creative","Systematic","Optional"],a:2,e:"Accident investigation is a systematic process to determine causes and prevent recurrence."},
+        {q:"Which event should also be investigated (not just accidents)?",opts:["Near misses","Only fatal accidents","Only injuries","Only equipment damage"],a:0,e:"Near misses, incidents, AND accidents should all be investigated — near misses are especially valuable."},
+        {q:"The purpose of 'follow-up' in investigation is:",opts:["Close the file","Ensure corrective actions were actually implemented","Write a media statement","Punish responsible parties"],a:1,e:"Follow-up ensures the corrective actions from the investigation were actually implemented."},
+        {q:"Corrective actions after a slip accident would include:",opts:["Firing the worker","Ignoring the hazard","Implement a maintenance schedule and train staff","Moving to a new location"],a:2,e:"Corrective actions: implement maintenance schedule, inspect pipelines, train staff, improve supervision."},
+        {q:"Jumping to conclusions during investigation is:",opts:["A best practice","A data collection method","A common mistake","A corrective action"],a:2,e:"Jumping to conclusions before fully investigating leads to wrong corrective actions."},
+        {q:"Investigation should use team discussion because:",opts:["It is faster","It gets multiple perspectives and finds system-level causes","It satisfies legal requirements only","It reduces paperwork"],a:1,e:"Team discussion provides multiple perspectives and is more likely to uncover system-level root causes."},
+      ],
+      medium:[
+        {q:"A tool falls from height but misses all workers. This is best classified as:",opts:["An accident","A near miss","An incident with actual harm","A planned event"],a:1,e:"Tool falls but misses = Near miss. No actual harm occurred, but the potential was present."},
+        {q:"A worker slips and breaks an arm. This is classified as:",opts:["A near miss","An incident only","An accident","A hazard"],a:2,e:"Actual injury (broken arm) = Accident. An unplanned event that resulted in actual harm."},
+        {q:"In the case study, the root cause of a worker slipping was:",opts:["The worker was careless","The floor was old","Lack of a maintenance system","Bad weather outside"],a:2,e:"5 Whys: slip → wet floor → water leak → damaged pipe → no maintenance → ROOT CAUSE: lack of maintenance system."},
+        {q:"After a 5 Whys analysis, corrective actions should focus on:",opts:["Penalizing the worker","Fixing the identified root cause (system failure)","Replacing the equipment","Moving workers to another area"],a:1,e:"Corrective actions must address the ROOT CAUSE identified by the 5 Whys analysis."},
+        {q:"Environmental conditions collected as evidence include:",opts:["Worker's personal life","Weather, lighting, temperature at the time of incident","Company profits","HR records"],a:1,e:"Environmental conditions: weather, lighting, temperature, noise levels at the time of the incident."},
+        {q:"The step 'Analyze causes' in investigation involves:",opts:["Securing the accident scene","Taking photos","Examining evidence to determine why the incident happened","Writing the final report"],a:2,e:"Analyzing causes involves examining all collected evidence to determine why the incident happened."},
+        {q:"Which is NOT a reason to investigate incidents?",opts:["Prevent recurrence","Improve safety systems","Find someone to blame","Legal and compliance reasons"],a:2,e:"Finding someone to blame is NOT a reason for investigation."},
+        {q:"'Stopping the why chain too early' is a problem because:",opts:["It makes investigation faster","It leads to finding symptoms, not root causes","It is a best practice","It saves time"],a:1,e:"Stopping too early finds a symptom (e.g., wet floor), not the root cause (e.g., lack of maintenance system)."},
+        {q:"An investigation that avoids blaming individuals and focuses on the system follows:",opts:["Punitive approach","Blame-based approach","No-blame, systems-focused approach","Legal-only approach"],a:2,e:"Best practice is a no-blame, systems-focused approach — identifying systemic failures."},
+        {q:"Documentation in investigation is important because:",opts:["It satisfies legal requirements only","It creates a record that can prevent future incidents and support training","It takes extra time","It is optional"],a:1,e:"Documentation captures lessons learned, supports training, and provides evidence of corrective actions."},
+        {q:"The 5 steps of investigation in correct order are:",opts:["Collect → Secure → Analyze → Report → Follow up","Secure → Collect → Analyze → Report → Follow up","Analyze → Secure → Collect → Report → Follow up","Report → Secure → Collect → Analyze → Follow up"],a:1,e:"Correct order: Secure → Collect → Analyze → Report → Follow up."},
+        {q:"The 5 Whys method is described as:",opts:["Complex and requiring experts","Simple but powerful method for root cause analysis","A statistical analysis tool","Only used for fatal accidents"],a:1,e:"The 5 Whys is a simple but powerful method — it drills from the visible problem to the underlying failure."},
+        {q:"Why should near misses be investigated even when no harm occurred?",opts:["Legal obligation only","Near misses reveal potential hazards before they cause real accidents","They are more common than accidents","Only because management requires it"],a:1,e:"Near misses reveal existing hazards that could cause real accidents — investigating them is proactive prevention."},
+        {q:"A lack of documentation after investigation leads to:",opts:["Faster resolution","Inability to prevent recurrence in future","Better learning outcomes","Legal compliance"],a:1,e:"Lack of documentation means lessons are not captured, making it impossible to prevent similar incidents."},
+        {q:"The step 'Report findings' should include:",opts:["Only the names of blamed workers","Facts, root causes, and recommended corrective actions","Financial costs only","Management opinions only"],a:1,e:"The report should be factual: incident details, identified root causes, and recommended corrective actions."},
+        {q:"Which TWO are common investigation mistakes?",opts:["Being honest + focusing on systems","Stopping too early + jumping to conclusions","Collecting photos + interviewing witnesses","Documenting everything + following up"],a:1,e:"Common mistakes: stopping the 'why' chain too early and jumping to conclusions before full investigation."},
+        {q:"Witness statements in data collection are important because:",opts:["They replace the need for photos","They provide first-hand accounts from multiple perspectives","They are only needed for fatal accidents","They can replace documentation"],a:1,e:"Witness statements provide first-hand accounts from multiple perspectives, building a complete picture."},
+      ],
+      hard:[
+        {q:"Classify each event: (1) Scaffold collapses injuring 3. (2) Scaffold sways but no one falls. (3) Scaffold wobbles with workers present.",opts:["(1)Incident (2)Accident (3)Near miss","(1)Accident (2)Near miss (3)Incident","(1)Near miss (2)Accident (3)Incident","(1)Accident (2)Incident (3)Near miss"],a:1,e:"(1) Injuries = Accident. (2) No one falls = Near miss. (3) Wobbles with workers = Incident."},
+        {q:"5 Whys chain: Machine broke → Operator error → Insufficient training → No training budget → Management cut costs. Root cause?",opts:["Operator error","Insufficient training","No training budget","Management decision to cut costs"],a:3,e:"Following all 5 whys: the ROOT CAUSE is management's decision to cut costs."},
+        {q:"5 similar accidents occurred in 3 months. The MOST CRITICAL response is:",opts:["Write individual reports for each","Find and fire the workers involved","Analyze patterns across all 5 incidents to identify a systemic root cause","Increase insurance coverage"],a:2,e:"Multiple similar incidents signal a systemic failure. Analyzing patterns across all incidents finds the root cause."},
+        {q:"A corrective action addresses wet floor but not the maintenance system root cause. This will likely lead to:",opts:["Permanent prevention","Recurrence of the same type of incident","Improved investigation quality","Better documentation"],a:1,e:"Addressing only the proximate cause without fixing the root cause means recurrence is likely."},
+        {q:"A supervisor tells you to write that a worker was 'careless.' The correct response is:",opts:["Write it as the supervisor says","Include it as one factor among system failures","Refuse and focus on factual evidence and system failures","Ignore the supervisor completely"],a:1,e:"Best practice: be honest and factual. Include all relevant factors but focus on system failures."},
+        {q:"In the 5 Whys case study, corrective actions for 'lack of maintenance system' included all EXCEPT:",opts:["Implement a maintenance schedule","Inspect pipelines regularly","Train maintenance staff","Relocate the facility"],a:3,e:"Corrective actions: maintenance schedule, pipeline inspection, train staff, improve supervision. Relocating is not listed."},
+        {q:"A company investigates 100 near misses but takes no corrective action. What will happen?",opts:["Near misses will decrease automatically","Accidents will eventually occur because root causes were not addressed","The investigation process is complete","Workers will self-correct their behaviour"],a:1,e:"Investigating without corrective action is meaningless. Unaddressed root causes will lead to actual accidents."},
+        {q:"Which best explains 'focus on system failures' in investigation?",opts:["Find which worker made the error and retrain only that person","Examine equipment, procedures, training, supervision, and organizational factors","Upgrade the equipment involved","Replace the manager responsible"],a:1,e:"System focus examines equipment, procedures, training, supervision, and organizational factors — not individual blame."},
+        {q:"A 5 Whys analysis ends at Why 3 because the team found a 'probable' cause. This is:",opts:["Acceptable — 3 whys is sometimes enough","A common mistake — stopping too early may miss the true root cause","Correct best practice","Required by law"],a:1,e:"Stopping too early is a common mistake. The team should continue asking 'why?' until reaching the true root cause."},
+        {q:"The difference between 'accident investigation' and 'blame assignment' is:",opts:["They are the same thing","Investigation is systematic, fact-based, and focuses on prevention; blame focuses on punishment","Blame is more effective than investigation","Investigation is only for legal purposes"],a:1,e:"Investigation is systematic and aims to prevent recurrence. Blame focuses on punishment without fixing systems."},
+        {q:"An organization investigates incidents but NEVER shares findings with employees. This violates which best practice?",opts:["Being honest and factual","Using team discussion","Avoiding blame","Focusing on systems"],a:1,e:"Not sharing findings violates transparency. Sharing findings helps all workers learn and prevent recurrence."},
+        {q:"What is the purpose of 'corrective actions' vs punitive actions?",opts:["To punish workers who caused the incident","To fix the system failures that allowed the incident and prevent recurrence","To close the legal case","To satisfy insurance requirements only"],a:1,e:"Corrective actions fix underlying system failures (root causes) to prevent the same incident from recurring."},
+        {q:"A near miss is reported. Management says 'no one was hurt, so no investigation needed.' This is:",opts:["Correct — no harm means no investigation needed","Incorrect — near misses must be investigated to prevent future accidents","Acceptable for minor near misses only","Required by all companies"],a:1,e:"Near misses MUST be investigated. They reveal existing hazards before they cause actual accidents."},
+        {q:"In the 5 Whys method, each answer to 'Why?' becomes:",opts:["A corrective action","The subject of the next 'Why?' question","The root cause","A legal finding"],a:1,e:"In the 5 Whys, each answer becomes the subject of the next 'Why?' question, drilling deeper toward the root cause."},
+        {q:"Which combination represents a COMPLETE and CORRECT investigation process?",opts:["Secure → Blame → Report → Close","Secure → Collect → Analyze → Report → Follow up","Collect → Analyze → Blame → Report","Report → Analyze → Collect → Secure"],a:1,e:"The correct complete process: Secure → Collect → Analyze → Report → Follow up."},
+        {q:"Root cause is 'inadequate budget for training.' The most appropriate corrective action is:",opts:["Fire the trainer","Ignore the budget issue","Escalate to management to allocate training budget as a priority","Reduce training requirements"],a:2,e:"If root cause is inadequate training budget, escalate to management to allocate proper budget."},
+      ]
+    }
+  },
+  {
+    id:3, tag:"LECTURE 04", title:"Key Performance Indicators (KPIs)",
+    desc:"Leading vs lagging indicators, SMART KPIs, and safety performance measurement.",
+    topics:["KPI Definition","Leading Indicators","Lagging Indicators","SMART Framework","Key Safety KPIs"],
+    questions:{
+      easy:[
+        {q:"KPIs in HSE are:",opts:["Types of personal injuries","Measurable values to evaluate safety performance","Kinds of PPE","Knowledge-based protocols"],a:1,e:"KPIs = Key Performance Indicators — measurable values used to evaluate health and safety performance."},
+        {q:"How many types of KPIs exist in HSE?",opts:["One","Two","Three","Four"],a:1,e:"Two types: Leading Indicators (Proactive) and Lagging Indicators (Reactive)."},
+        {q:"Leading Indicators are also called:",opts:["Reactive","Lagging","Proactive","Negative"],a:2,e:"Leading Indicators are Proactive — they measure actions taken BEFORE incidents to prevent them."},
+        {q:"Lagging Indicators are also called:",opts:["Proactive","Leading","Reactive","Positive"],a:2,e:"Lagging Indicators are Reactive — they measure outcomes AFTER incidents have occurred."},
+        {q:"Which is an example of a LEADING indicator?",opts:["Number of fatalities","Lost time injuries","Safety inspections conducted","Recordable incidents"],a:2,e:"Safety inspections = Leading (proactive) — preventive activities done BEFORE incidents."},
+        {q:"Which is an example of a LAGGING indicator?",opts:["Near miss reports","Training sessions","Hazard corrections","Lost Time Injuries (LTI)"],a:3,e:"Lost Time Injuries (LTI) = Lagging (reactive) — measuring outcomes that already happened."},
+        {q:"What does 'S' in SMART stand for?",opts:["Simple","Strategic","Specific","Significant"],a:2,e:"S = Specific — the KPI must be clear and well-defined."},
+        {q:"What does 'M' in SMART stand for?",opts:["Motivated","Meaningful","Measurable","Monthly"],a:2,e:"M = Measurable — the KPI must be quantifiable."},
+        {q:"What does 'A' in SMART stand for?",opts:["Annual","Achievable","Automatic","Ambitious"],a:1,e:"A = Achievable — the KPI must be realistic and attainable."},
+        {q:"What does 'R' in SMART stand for?",opts:["Rapid","Repeatable","Relevant","Regulated"],a:2,e:"R = Relevant — the KPI must be related to actual safety goals."},
+        {q:"What does 'T' in SMART stand for?",opts:["Total","Trackable","Time-bound","Trained"],a:2,e:"T = Time-bound — the KPI must have a clear deadline."},
+        {q:"Fatalities are which type of KPI?",opts:["Leading","Proactive","Lagging","SMART"],a:2,e:"Fatalities = Lagging Indicators — reactive measures of outcomes that already happened."},
+        {q:"Near miss reports are which type of KPI?",opts:["Lagging","Reactive","Leading","Negative"],a:2,e:"Near miss reports = Leading Indicators — proactive actions that help prevent future accidents."},
+        {q:"KPIs help to:",opts:["Reduce wages","Measure safety performance, identify risks, reduce incidents, ensure compliance","Increase production only","Replace risk assessment"],a:1,e:"KPIs help measure safety performance, identify risks, reduce incidents, and ensure compliance."},
+        {q:"Training sessions are which type of KPI?",opts:["Lagging","Reactive","Leading","Output"],a:2,e:"Training sessions = Leading Indicators — proactive safety activities that prevent future incidents."},
+        {q:"PPE Compliance is measured as a:",opts:["Lagging indicator","Leading KPI measuring whether workers use required protective equipment","Reactive measure","Financial KPI"],a:1,e:"PPE Compliance Rate is a Leading KPI — measures the percentage of workers correctly using required PPE."},
+        {q:"Which is NOT a key safety KPI?",opts:["Near Miss Rate","PPE Compliance","Training Rate","Employee lunch preference"],a:3,e:"Key safety KPIs: Near Miss Rate, Training Rate, PPE Compliance. Lunch preference is irrelevant."},
+      ],
+      medium:[
+        {q:"A KPI that says 'reduce injuries by 20% within 6 months' is:",opts:["Not SMART — too vague","SMART — Specific, Measurable, Achievable, Relevant, Time-bound","Only measurable, not specific","Not achievable"],a:1,e:"This KPI is SMART: Specific (injuries), Measurable (20%), Achievable, Relevant (safety), Time-bound (6 months)."},
+        {q:"Which best describes the difference between Leading and Lagging KPIs?",opts:["Leading measures past events; Lagging future","Leading is proactive (before incidents); Lagging is reactive (after incidents)","They mean the same thing","Lagging is better than leading"],a:1,e:"Leading = Proactive (before). Lagging = Reactive (after). Both are needed for a complete safety picture."},
+        {q:"Why are Leading indicators considered more valuable?",opts:["Easier to count","They prevent incidents before they happen","Required by law only","They cost less"],a:1,e:"Leading indicators are proactive — allowing action BEFORE incidents occur."},
+        {q:"Recordable incidents are which type of indicator?",opts:["Leading","Proactive","Lagging","Neutral"],a:2,e:"Recordable incidents = Lagging Indicators — they measure incidents that have already been recorded."},
+        {q:"Hazard corrections are which type of KPI?",opts:["Lagging","Reactive","Leading","None of above"],a:2,e:"Hazard corrections (fixing identified hazards) = Leading Indicators — proactive safety actions."},
+        {q:"A KPI that cannot be measured is:",opts:["SMART","Leading","Lagging","Not SMART"],a:3,e:"A KPI must be Measurable (M in SMART). If it can't be measured, it fails SMART criteria."},
+        {q:"KPIs support decision-making by:",opts:["Replacing risk assessment","Providing measurable data on safety performance trends","Eliminating the need for investigation","Reducing training costs"],a:1,e:"KPIs provide measurable data that supports informed decision-making about safety performance."},
+        {q:"'Reduce lost time injuries by 15% by end of Q4' — which SMART criteria does 'Q4' satisfy?",opts:["Specific","Measurable","Achievable","Time-bound"],a:3,e:"'By end of Q4' specifies a clear deadline — satisfying the Time-bound criteria of SMART."},
+        {q:"'Number of safety audits completed per month' is what type of KPI?",opts:["Lagging — it measures past audits","Leading — it measures proactive safety activity","Financial KPI","Irrelevant KPI"],a:1,e:"Number of audits completed = Leading KPI — measuring proactive safety activity done to prevent incidents."},
+        {q:"An organization tracks only lagging indicators. What is the main problem?",opts:["They have too much data","They only react after incidents occur, missing the chance to prevent them","Lagging indicators are inaccurate","They cost too much to measure"],a:1,e:"Tracking only lagging indicators is reactive — you only know about problems after they've caused harm."},
+        {q:"KPIs ensure compliance by:",opts:["Firing non-compliant workers","Providing data showing whether safety standards are being met","Replacing safety inspections","Reducing training budgets"],a:1,e:"KPIs provide measurable data showing whether the organization is meeting safety standards."},
+        {q:"Which statement about KPIs is CORRECT?",opts:["Only lagging KPIs are useful","Only leading KPIs matter","Both leading and lagging KPIs together give a complete safety picture","KPIs are only for large companies"],a:2,e:"Both types are needed: leading prevents future incidents; lagging shows what's already happened."},
+        {q:"'Increase safety training completion to 90% of all staff' — which SMART element is '90%'?",opts:["Specific","Measurable","Achievable","Relevant"],a:1,e:"'90%' makes the KPI Measurable — it can be tracked and progress can be evaluated."},
+        {q:"A company has high near miss reporting rates. This indicates:",opts:["The workplace is very unsafe","Workers are actively reporting hazards — a positive safety culture","A failure in the safety system","Management is not controlling risks"],a:1,e:"High near miss reporting = positive safety culture. Workers are aware and actively identifying hazards."},
+        {q:"The Training Rate KPI measures:",opts:["How fast workers work","How much workers earn","The proportion receiving required safety training","Equipment performance"],a:2,e:"Training Rate = percentage of workers who have completed required safety training — a leading KPI."},
+        {q:"'Conduct 2 safety inspections per week in all departments' — is this SMART?",opts:["No — not specific enough","No — cannot be measured","Yes — Specific, Measurable, and can be Achievable, Relevant, Time-bound","No — not relevant to safety"],a:2,e:"This KPI is Specific (safety inspections, all departments), Measurable (2 per week), and meets SMART criteria."},
+        {q:"Which KPI would MOST directly indicate an improvement in safety culture?",opts:["Increased fatality count","Increased near miss reporting rate","More equipment breakdowns","Higher insurance premiums"],a:1,e:"Higher near miss reporting = workers are more aware and willing to report — indicating a better safety culture."},
+      ],
+      hard:[
+        {q:"An organization has zero reported injuries this year. Does this mean they are safe?",opts:["Yes — zero injuries proves safety","Not necessarily — they may have lagging KPIs only with poor leading indicators","Yes — lagging indicators are the best measure","No — injuries always happen in every workplace"],a:1,e:"Zero injuries (lagging KPI) doesn't prove safety. Without strong leading indicators, hazards may still exist."},
+        {q:"A SMART KPI: 'Improve safety.' What is WRONG with this KPI?",opts:["Not time-bound only","Not specific or measurable — fails multiple SMART criteria","Not achievable","Not relevant"],a:1,e:"'Improve safety' fails Specific (what aspect?), Measurable (how?), and Time-bound (by when?). Multiple SMART failures."},
+        {q:"Which combination of KPIs gives the most COMPLETE safety picture?",opts:["Only lagging KPIs (injuries, fatalities)","Only leading KPIs (training, inspections)","Both leading KPIs (training, inspections) + lagging KPIs (injuries, LTI)","Only financial KPIs"],a:2,e:"The most complete picture combines leading (proactive prevention) and lagging (reactive outcomes) KPIs."},
+        {q:"A company tracks 'number of PPE violations per week.' This is:",opts:["A lagging indicator (reactive)","A leading indicator (proactive)","A financial KPI","Not a valid KPI"],a:1,e:"PPE violations per week = Leading indicator. It measures compliance with safety requirements BEFORE incidents occur."},
+        {q:"Lost Time Injury Rate increases despite high training completion. This suggests:",opts:["Training is the wrong KPI to track","Training content or delivery may be ineffective — disconnect between leading and lagging","Lagging KPIs are unreliable","Workers are not trying hard enough"],a:1,e:"A disconnect between good leading (training) and poor lagging (LTI) suggests training may not be effective."},
+        {q:"'Reduce chemical incident rate by 30% within 12 months by implementing MSDS training for all lab workers.' Which SMART element does 'all lab workers' address?",opts:["Specific (who is targeted)","Measurable","Achievable","Time-bound"],a:0,e:"'All lab workers' makes the KPI Specific — it defines exactly WHO the KPI targets."},
+        {q:"Why should KPIs be reviewed regularly?",opts:["To create more paperwork","To ensure they remain relevant, achievable, and aligned with changing safety goals","To increase complexity","Legal requirement only"],a:1,e:"Regular review ensures KPIs remain Relevant (R in SMART) and aligned with current safety priorities."},
+        {q:"An organization sets a KPI: 'Zero fatalities forever.' Which SMART element fails?",opts:["Specific","Measurable","Achievable","Relevant"],a:2,e:"'Zero fatalities forever' may not be fully Achievable — SMART KPIs must be realistic with current resources."},
+        {q:"High workload causing burnout would MOST directly be tracked by which KPI?",opts:["Number of fatalities","Lost Time Injury rate","Employee stress surveys and near miss rates from human error","Equipment inspection frequency"],a:2,e:"Psychosocial hazards are best tracked through leading KPIs like stress surveys and human-error near miss rates."},
+        {q:"Lagging indicators are still valuable because:",opts:["They are easier to collect","They provide data to identify patterns, learn from failures, and benchmark performance over time","They replace leading indicators","They predict future incidents directly"],a:1,e:"Lagging indicators provide historical data to identify patterns, benchmark performance, and learn from failures."},
+        {q:"An organization has a SMART KPI: 'Conduct monthly safety audits in all 6 departments, achieving 90% compliance by December 31.' How many SMART criteria are clearly met?",opts:["2","3","4","All 5"],a:3,e:"All 5 SMART criteria: Specific (6 departments, monthly), Measurable (90%), Achievable, Relevant, Time-bound (Dec 31)."},
+        {q:"A near miss rate of 0 for 6 months could mean:",opts:["The workplace is perfectly safe","Workers have stopped reporting near misses (under-reporting problem)","All hazards have been eliminated","All KPIs are SMART"],a:1,e:"Near miss rate of 0 often indicates UNDER-REPORTING, not an absence of hazards."},
+        {q:"'PPE compliance is 100% on Mondays only.' This KPI fails:",opts:["Specific","Measurable","Achievable","Relevant and Time-bound (not sustained)"],a:3,e:"Compliance only on Mondays is not sustained — it fails to be Relevant and lacks meaningful Time-bound measurement."},
+        {q:"Which is the MOST proactive approach to HSE performance measurement?",opts:["Counting fatalities quarterly","Tracking LTI monthly","Measuring training completion, hazard corrections, and near miss reporting weekly","Reviewing incidents annually"],a:2,e:"Measuring training completion, hazard corrections, and near miss reporting weekly is the most proactive approach."},
+        {q:"An organization switches from only tracking lagging KPIs to also tracking leading KPIs. The expected outcome is:",opts:["More incidents in the short term","Better ability to predict and prevent incidents before they occur","Higher insurance costs","More paperwork but no safety improvement"],a:1,e:"Adding leading KPIs gives proactive visibility — allowing prediction and prevention of incidents BEFORE they occur."},
+        {q:"A company's KPI is: 'Improve worker awareness.' A SMARTER version would be:",opts:["'Improve worker awareness significantly'","'Conduct 4 safety awareness sessions per month for all staff, measuring pre/post knowledge scores, by Q2'","'Train all workers in safety'","'Do more safety training'"],a:1,e:"The improved version is Specific (4 sessions/month, all staff), Measurable (knowledge scores), Time-bound (Q2)."},
+      ]
+    }
+  },
+  {
+    id:4, tag:"LECTURE 05", title:"HSE Commitments, Iceberg & Risk Matrix",
+    desc:"Legal commitments, iceberg theory of costs, and advanced risk matrix analysis.",
+    topics:["Egyptian Labor Law","Iceberg Theory","Direct vs Indirect Costs","Risk Matrix Deep Dive","Emergency Evacuation Steps"],
+    questions:{
+      easy:[
+        {q:"Egyptian Labor Law No. 14 of 2025 requires:",opts:["Environmental protection only","Safe work environment for all workers inside Egypt","Only management safety","International trade safety"],a:1,e:"Egyptian Labor Law No. 14 of 2025 requires safe working environment for ALL workers inside the country."},
+        {q:"The iceberg model shows that accident costs are mostly:",opts:["Visible and small","Hidden and large (indirect costs)","Equal in direct and indirect","Covered by insurance"],a:1,e:"Like an iceberg, the largest portion of accident costs (indirect) is hidden below the surface."},
+        {q:"Direct accident costs include:",opts:["Lost time","Legal investigation expenses","Treatment of injured workers","Training a replacement"],a:2,e:"Treatment of injured workers = Direct cost — immediately and clearly traceable to the accident."},
+        {q:"Indirect accident costs include:",opts:["Repairing damaged equipment","Compensation to family of deceased","Increased insurance premiums","Paid sick leave for the injured worker"],a:3,e:"Paid sick leave = Indirect (hidden) cost."},
+        {q:"For every £1 of direct accident costs, indirect costs are:",opts:["£1–2","£3–5","£8–36","£50–100"],a:2,e:"UK HSE studies (1993): For every £1 direct cost → £8–36 indirect costs."},
+        {q:"The source of the iceberg cost statistics is:",opts:["Egyptian Labor Law 2025","WHO guidelines 2020","UK HSE studies 1993","UN safety standards 2018"],a:2,e:"The iceberg cost ratio (£1:£8–36) comes from British HSE studies conducted in 1993."},
+        {q:"Compensation to families of deceased workers is:",opts:["An indirect cost","A leading KPI","A direct cost","A lagging KPI"],a:2,e:"Compensation to families = Direct cost — directly resulting from the fatal accident."},
+        {q:"Training a replacement worker after an accident is:",opts:["A direct cost","An indirect (hidden) cost","Not a real cost","A leading KPI"],a:1,e:"Training a replacement = Indirect cost — part of the true financial impact."},
+        {q:"The ethical commitment to HSE is based on:",opts:["Egyptian law only","Financial reasons","No religion or culture neglects preserving human life","Company policy alone"],a:2,e:"Ethical obligation: no religion or culture on Earth neglects the importance of preserving human life."},
+        {q:"During evacuation Step 5, you may check the area ONLY if:",opts:["You are in danger","You cannot find the assembly point","You are NOT exposed to any danger","The alarm has stopped"],a:2,e:"Step 5 only applies if YOU are not exposed to any danger."},
+        {q:"Legal expenses after an accident are:",opts:["Direct costs","Indirect costs","Not a cost","Insurance covered only"],a:1,e:"Legal expenses = Indirect (hidden) costs — they accumulate significantly after an accident."},
+        {q:"Step 7 of evacuation says to gather at the assembly point and:",opts:["Leave immediately after","Wait for instructions and report missing persons to coordinator","Search for missing persons yourself","Return after 10 minutes"],a:1,e:"Step 7: Gather at assembly point, wait for instructions. Report missing persons to coordinator."},
+        {q:"The iceberg analogy teaches us that:",opts:["Direct costs are always larger","True accident costs are much larger than they appear","Direct and indirect costs are equal","Accidents have no financial impact"],a:1,e:"The iceberg shows visible (direct) costs are just the tip — the much larger indirect costs remain hidden."},
+        {q:"An environmental issue shall be significant at score:",opts:["≥1","≥2","≥4","≥10"],a:2,e:"Environmental issues shall be any score ≥4 or breach of legislative requirements."},
+        {q:"Increased insurance premiums on the company after an accident are:",opts:["Indirect costs","Direct costs","Not relevant","A leading KPI"],a:1,e:"Increased insurance premiums = Direct costs — directly borne by the company as result of the accident."},
+        {q:"Step 8 of evacuation states you should NOT return unless:",opts:["The alarm stops","You feel safe","Directed by the site incident coordinator","30 minutes have passed"],a:2,e:"Step 8: Do NOT return to the evacuated area unless directed by the site incident coordinator."},
+        {q:"Repairing damaged equipment after an accident is:",opts:["An indirect cost","A direct cost","A KPI","A control measure"],a:1,e:"Repairing or replacing damaged equipment = Direct cost — immediately traceable to the accident."},
+      ],
+      medium:[
+        {q:"Delays in completing work after an accident are:",opts:["Direct costs","Indirect (hidden) costs","KPIs","Control measures"],a:1,e:"Work delays = Indirect costs — not immediately obvious but part of the true financial impact."},
+        {q:"Lost time (wasted time) after an accident is:",opts:["A direct cost","A leading KPI","An indirect cost","A lagging KPI"],a:2,e:"Lost time = Indirect cost — workers and managers lose productive time dealing with the aftermath."},
+        {q:"The 3 reasons for HSE compliance in order are:",opts:["Financial, Legal, Ethical","Legal, Ethical, Financial","Ethical, Financial, Legal","Legal, Financial, Ethical"],a:1,e:"The 3 commitments: 1. Legal, 2. Ethical, 3. Financial (as presented in the lecture)."},
+        {q:"Step 4 of evacuation (shut down equipment) exists to:",opts:["Save energy","Prevent further hazards from unattended running machinery","Speed up evacuation","Protect the equipment only"],a:1,e:"Shutting down equipment prevents further hazards — unattended machinery could cause additional accidents."},
+        {q:"A severity of 3 (Critical) corresponds to which safety outcome?",opts:["Death","Permanent disability","Lost Workday Case (LWC)","First aid only"],a:2,e:"Severity 3 = Critical = Lost Workday Case (LWC)."},
+        {q:"The control measure 'engineering control' works by:",opts:["Removing the hazard entirely","Replacing with safer alternative","Isolating people from the hazard","Changing work procedures"],a:2,e:"Engineering controls ISOLATE people from the hazard (e.g., machine guards, ventilation)."},
+        {q:"Substitution as a control means:",opts:["Removing the hazard physically","Replacing the hazard with something less harmful","Changing work hours","Providing PPE"],a:1,e:"Substitution = replacing the hazard with something safer."},
+        {q:"A damage to the section (department) corresponds to severity level:",opts:["5 – Catastrophic","4 – Major","3 – Critical","2 – Moderate"],a:1,e:"Damage to Section = Major severity (4)."},
+        {q:"Damage to furniture only corresponds to severity level:",opts:["5 – Catastrophic","4 – Major","2 – Moderate","1 – Negligible"],a:3,e:"Damage to furniture = Negligible severity (1) — minimal impact, no injury."},
+        {q:"A near miss case in safety terms is severity level:",opts:["5 – Catastrophic","3 – Critical","2 – Moderate","1 – Negligible"],a:3,e:"Near miss/first aid = Negligible severity (1) — no actual significant harm occurred."},
+        {q:"Extensive damage to the company as a whole = severity level:",opts:["5 – Catastrophic","4 – Major","3 – Critical","2 – Moderate"],a:0,e:"Extensive damage to the company = Catastrophic severity (5)."},
+        {q:"Impact on site released immediately and contained = severity level:",opts:["5 – Catastrophic","3 – Critical","2 – Moderate","1 – Negligible"],a:2,e:"Impact on site released and immediately contained = Moderate severity (2)."},
+        {q:"Why should you leave belongings behind during evacuation?",opts:["To keep paths clear and save time","Belongings are insured anyway","Management will collect them","It is tradition"],a:0,e:"Leaving belongings ensures you can evacuate quickly and paths remain clear for others."},
+        {q:"The iceberg model specifically comes from which field of study?",opts:["Marine biology","HSE/accident cost analysis","Financial accounting","Insurance studies"],a:1,e:"The iceberg model is used in HSE to illustrate that direct costs are far smaller than the hidden indirect costs."},
+        {q:"Hazardous substances and unstable loads are examples of which hazard source?",opts:["Human factors","Work methods","Materials","Machines & tools"],a:2,e:"Hazardous substances, flammable/toxic materials, and unstable loads = hazards from MATERIALS."},
+        {q:"An MTC (Medical Treatment Case) corresponds to severity level:",opts:["5 – Catastrophic","4 – Major","3 – Critical","2 – Moderate"],a:3,e:"Medical Treatment Case (MTC) or Restricted Workday Case = Moderate severity (2)."},
+        {q:"A permanent occupational disease corresponds to severity level:",opts:["5 – Catastrophic","4 – Major","3 – Critical","2 – Moderate"],a:1,e:"Permanent disease = Major severity (4) — leads to permanent health impairment."},
+      ],
+      hard:[
+        {q:"Accident causes: treatment (£500), investigation (£3,000), lost production (£8,000), replacement training (£2,000). Direct vs indirect split?",opts:["£500 direct, £13,000 indirect","£13,500 direct, £0 indirect","£3,500 direct, £10,000 indirect","£500 direct, £500 indirect"],a:0,e:"Direct = £500 (treatment only). Indirect = investigation + lost production + training = £13,000."},
+        {q:"A worker is partially disabled. Severity level is __ and environmental impact if chemicals involved needs score ___.",opts:["Major (4) and score ≥4","Critical (3) and score ≥2","Catastrophic (5) and score ≥1","Moderate (2) and score ≥4"],a:0,e:"Partial disability = Major (4). Environmental issues must be ≥4 to be significant."},
+        {q:"If Severity=3 and Probability=5, the risk score is _____ and action needed is _____.",opts:["Score 8 — Limited risk, 30 days","Score 15 — High risk, 7 days","Score 20 — Unacceptable, STOP","Score 25 — Unacceptable, STOP"],a:1,e:"S3 × P5 = 15. Score 11–16 = High risk, review within 7 days."},
+        {q:"Company X tracks 12 direct cost categories. Company Y tracks 6 direct + 12 indirect. Which has a more accurate picture?",opts:["Company X — more detailed direct tracking","Company Y — captures the full iceberg (direct + indirect)","Both are equally accurate","Neither is accurate"],a:1,e:"Company Y captures both direct (visible) and indirect (hidden) costs — giving a far more accurate picture."},
+        {q:"A daily process (P=4) causes permanent disease (S=4). Score and required action?",opts:["Score 16 — High risk, 7 days","Score 20 — Unacceptable, STOP","Score 12 — High risk, 7 days","Score 8 — Limited risk, 30 days"],a:0,e:"P4 × S4 = 16. Score 11–16 = High risk — review within 7 days."},
+        {q:"The Egyptian Labor Law covers which workforce?",opts:["Egyptian nationals only","Foreign workers only","All workers inside Egypt regardless of nationality","Only management staff"],a:2,e:"The Egyptian Labor Law requires safe environment for ALL workers inside Egypt."},
+        {q:"During evacuation Step 6 (assist others), your personal risk is high. You should:",opts:["Help anyway — saving lives is paramount","Do not help if it puts your safety at risk; alert coordinator instead","Leave the building immediately","Wait until danger passes then help"],a:1,e:"Assist others ONLY IF it does not put your own safety at risk. Alert the coordinator so trained personnel can help."},
+        {q:"Direct costs = £2,000. Using the iceberg ratio, estimate the total true cost range.",opts:["£2,000–£4,000","£18,000–£74,000 (direct £2K + indirect £16K–£72K)","£2,000–£5,000","£20,000–£50,000"],a:1,e:"For every £1 direct, £8–36 indirect. £2,000 direct = £16,000–£72,000 indirect. Total = £18,000–£74,000."},
+        {q:"Risk matrix: continuous process (P=5), extensive damage to company (S=5). What happens?",opts:["Score 25 — Limited risk, 30 days","Score 25 — High risk, 7 days","Score 25 — Unacceptable, STOP operation and review controls immediately","Score 20 — Unacceptable"],a:2,e:"P5 × S5 = 25. Maximum score = Unacceptable. STOP operation and review controls immediately."},
+        {q:"An organization eliminates a hazard but later reintroduces a similar process. This represents:",opts:["Substitution","Engineering control","Elimination was reversed — need to re-evaluate and re-apply controls","Administrative control"],a:2,e:"If elimination is reversed, the hazard control is no longer effective. Must re-evaluate the hierarchy."},
+        {q:"The HSE definition states it protects people, property, and environment 'within a legislative framework.' This means:",opts:["Only lawyers can apply HSE","HSE operates under laws and regulations — compliance is mandatory, not optional","HSE is voluntary","Only in court"],a:1,e:"'Within a legislative framework' means HSE operates under binding laws — not voluntary guidelines."},
+        {q:"Indirect costs are described as 'hidden' primarily because:",opts:["They are illegal to mention","They don't appear as obvious line items immediately — they accumulate over time","They are covered by insurance","They are smaller than direct costs"],a:1,e:"Indirect costs don't appear as immediate obvious charges — they accumulate and are often untracked."},
+        {q:"Step 5 of evacuation (check the area) is conditional. What condition must be met?",opts:["The alarm must be silent","At least 10 minutes must pass","You must NOT be exposed to any danger yourself","Your manager must authorize it"],a:2,e:"Step 5 is only done if you are NOT exposed to any danger — your safety always takes priority."},
+        {q:"A company says they comply with HSE only because of the law. Which commitment are they missing?",opts:["Legal commitment","Ethical commitment","Financial commitment","Both Ethical and Financial"],a:3,e:"Compliance purely for legal reasons misses both the Ethical and Financial commitments."},
+        {q:"Damage to infrastructure corresponds to which severity?",opts:["Moderate (2) — medical treatment or restricted work","Critical (3) — lost workday case","Major (4) — partial disability","Negligible (1) — first aid only"],a:0,e:"Damage to infrastructure = Moderate severity (2), corresponding to MTC or restricted workday."},
+        {q:"The hierarchy of controls is a 'preference order' because:",opts:["Higher levels are cheaper","Higher levels remove or reduce the hazard more completely","Lower levels are more reliable","PPE is the most important"],a:1,e:"Higher levels in the hierarchy remove or reduce the hazard more fundamentally. Elimination is best because the hazard is gone entirely."},
+      ]
+    }
+  },
+  {
+    id:5, tag:"LECTURE 06", title:"Workplace Threats & Detailed Hazards",
+    desc:"Violence, harassment, chemicals, fire, noise, falls, electricity & computer hazards.",
+    topics:["Workplace Violence","Harassment & Bullying","Chemical Entry Routes","Fire Detailed","Falls & Noise","Computer Hazards","Temperature"],
+    questions:{
+      easy:[
+        {q:"Workplace violence includes:",opts:["Providing safety training","Threats, intimidation, verbal abuse, and physical assault","Offering employee benefits","Conducting safety inspections"],a:1,e:"Workplace violence: threats, intimidation, verbal abuse, or physical assault from inside or outside the organization."},
+        {q:"Which profession is at HIGH risk of workplace violence?",opts:["Software developer in closed office","Delivery workers and solo workers","Laboratory researcher","Accountant in private office"],a:1,e:"High-risk professions: security/money transport, delivery workers, solo workers, receptionists, nurses, inspectors."},
+        {q:"The 3 routes chemicals enter the body are:",opts:["Eating, drinking, breathing","Absorption, Inhalation, Ingestion","Skin, lungs, blood","Touch, sight, smell"],a:1,e:"3 chemical entry routes: Absorption (skin), Inhalation (lungs/breathing), Ingestion (swallowing)."},
+        {q:"Inhalation means chemicals enter through:",opts:["The skin","Eating contaminated food","Breathing in vapors, dust, or fumes","Direct injection"],a:2,e:"Inhalation = breathing in chemical vapors, dust, or fumes."},
+        {q:"Absorption means chemicals enter through:",opts:["Breathing","Eating","The skin (contact, wounds, or cuts)","Swallowing"],a:2,e:"Absorption = chemical entering through the skin, wounds, or cuts."},
+        {q:"Falls from height are the _____ cause of workplace fatalities:",opts:["Third most common","Least common","Most common (number 1)","Second most common"],a:2,e:"Falls from height = MOST COMMON cause of fatalities in the workplace."},
+        {q:"The noise control rule states controls are needed when:",opts:["Any noise is present","A worker cannot hear a colleague at 2 meters due to noise","Noise causes a headache","More than 10 workers complain"],a:1,e:"If a colleague cannot be heard at 2 meters away → noise control measures are REQUIRED."},
+        {q:"Minimum workplace temperature for general work is:",opts:["10°C","13°C","16°C","20°C"],a:2,e:"Minimum acceptable workplace temperature for general work = 16°C."},
+        {q:"During a fire with thick smoke, you should:",opts:["Stand and walk fast","Crawl on the floor where air is cleaner","Open all windows","Hold your breath and run"],a:1,e:"Crawl on the floor — smoke rises, so cleaner air stays near the ground."},
+        {q:"If a door handle is HOT during a fire, you should:",opts:["Open it quickly","DO NOT open it — find another exit","Cool with water then open","Break it down"],a:1,e:"Hot door = fire on the other side. Opening it could cause a flashover. Find another exit."},
+        {q:"Prolonged computer use causes which health problems?",opts:["Chemical burns","Upper limb disorders, spinal injuries, eye strain","Biological infection","Falls from height"],a:1,e:"Computer hazards: upper limb disorders, spinal injuries (poor posture), eye strain."},
+        {q:"Modern fire science identifies how many elements for fire?",opts:["2","3","4","5"],a:2,e:"Modern research identifies 4 elements: Fuel, Heat, Oxygen, and Chain Reaction."},
+        {q:"The Arabic term الامتصاص means:",opts:["Inhalation","Ingestion","Absorption (through skin)","Elimination"],a:2,e:"الامتصاص = Absorption — chemical entering through the skin."},
+        {q:"The Arabic term الاستنشاق means:",opts:["Absorption","Ingestion","Inhalation (breathing in)","Elimination"],a:2,e:"الاستنشاق = Inhalation — breathing in chemical vapors, dust, or fumes."},
+        {q:"The Arabic term الابتلاع means:",opts:["Absorption","Inhalation","Substitution","Ingestion (swallowing)"],a:3,e:"الابتلاع = Ingestion — swallowing contaminated food or drinks."},
+        {q:"Minimum temperature for physically demanding work is:",opts:["10°C","13°C","16°C","18°C"],a:1,e:"For physically strenuous work, minimum acceptable temperature = 13°C."},
+        {q:"Harassment in the workplace includes:",opts:["Fair performance review","Screaming at employees, mockery, and belittling in front of peers","Providing clear job descriptions","Offering training opportunities"],a:1,e:"Harassment includes screaming, persistent mockery, belittling, withholding promotions, and intimidation."},
+      ],
+      medium:[
+        {q:"Psychological effects of workplace harassment include:",opts:["Better concentration","Anxiety, insomnia, high blood pressure, and loss of self-confidence","Increased productivity","No physical effects"],a:1,e:"Harassment causes: anxiety, headaches, insomnia, skin rashes, high blood pressure, ulcers, loss of self-confidence."},
+        {q:"Asbestos fibers primarily enter the body through:",opts:["Skin absorption","Ingestion","Inhalation — they stay in the lungs causing long-term damage","Direct injection"],a:2,e:"Asbestos fibers are inhaled and become permanently lodged in the lungs, causing serious long-term disease."},
+        {q:"Some chemicals need years of exposure before causing harm. This makes them:",opts:["Safe to use without protection","Particularly dangerous because workers may not notice early harm","Only relevant for older workers","Less dangerous than immediate-effect chemicals"],a:1,e:"Long-term exposure chemicals are especially dangerous because workers may not notice harm until serious damage has occurred."},
+        {q:"MSDS (Material Safety Data Sheet) contains:",opts:["Worker salary information","Threshold exposure limits and safety information for chemicals","Fire escape routes","Emergency contact numbers only"],a:1,e:"MSDS contains threshold exposure limits, handling instructions, and safety information for chemicals."},
+        {q:"Why should you close the door behind you when evacuating from a fire?",opts:["It is tradition","To slow fire and smoke spread, giving others more time to escape","To protect your belongings","It is not necessary"],a:1,e:"Closing doors behind you slows fire and smoke spread, buying more time for others to escape safely."},
+        {q:"Root causes of falls from height include all EXCEPT:",opts:["Failure to identify the fall hazard","Insufficient training","Excess protective equipment","No safe work method provided"],a:2,e:"Root causes of falls: failure to identify hazard, no safe work method, insufficient training, lack of supervision. Excess PPE is NOT a root cause."},
+        {q:"Long-term noise exposure differs from sudden loud noise because:",opts:["Long-term exposure causes immediate total hearing loss","Sudden noise causes gradual damage only","Long-term = gradual irreversible damage; Sudden = immediate total hearing loss","They have the same effect"],a:2,e:"Long-term noise = gradual accumulated irreversible damage. Sudden extreme noise = immediate total hearing loss."},
+        {q:"An effective measure to control workplace violence includes:",opts:["Reducing security staff","Training workers to recognize early warning signs","Removing reporting systems","Increasing workload"],a:1,e:"Control measures: train workers to recognize early signs, security cameras, reporting systems, modify work methods."},
+        {q:"Safe computer screen positioning requires the screen to be at:",opts:["Above eye level","Below desk level","Eye level — direct line of sight","As far away as possible"],a:2,e:"Screen at eye level = user looks straight ahead, reducing neck and eye strain."},
+        {q:"The 4th element of fire (modern theory) is:",opts:["Water","Wind","Chain Reaction (التفاعل المتسلسل)","Carbon dioxide"],a:2,e:"Modern research adds Chain Reaction as the 4th element — in addition to Fuel, Heat, Oxygen."},
+        {q:"A worker develops skin rash, high blood pressure, and insomnia after months of bullying. These are:",opts:["Physical injury symptoms","Chemical poisoning","Health effects of psychosocial hazards (harassment)","Biological infection symptoms"],a:2,e:"These are health effects of psychosocial hazards: skin rashes, high blood pressure, insomnia are all documented consequences."},
+        {q:"To reduce ergonomic computer hazards, employees should:",opts:["Work without breaks to finish faster","Take frequent short breaks and maintain proper posture","Use the mouse with the non-dominant hand only","Keep the screen at maximum brightness"],a:1,e:"Safe computer use: take frequent short breaks, maintain ergonomic posture, screen at eye level."},
+        {q:"The noise 2-meter rule is significant because:",opts:["It is a legal measurement","It provides an objective, practical trigger point for when noise controls must be implemented","Workers must always stand 2 meters apart","It applies only in factories"],a:1,e:"The 2-meter rule provides an objective, practical trigger for when noise is excessive and controls are needed."},
+        {q:"Fire response: 'Use fire extinguishers only if safe' means:",opts:["Always use extinguishers","Only use them if trained, fire is small, and you are not in danger","Use them only for Class A fires","Never use extinguishers — always evacuate"],a:1,e:"Use extinguishers only if trained, fire is small, you are not in danger, and the type matches the fire class."},
+        {q:"A worker in a spray paint room uses electrical equipment that produces sparks. The greatest risk is:",opts:["Ergonomic injury","Biological contamination","Fire or explosion — flammable paint fumes + electrical sparks","Noise-induced hearing loss"],a:2,e:"Flammable paint fumes + electrical sparks = fire/explosion risk."},
+        {q:"Ingestion of chemicals occurs when:",opts:["A worker breathes in fumes","Chemical touches the skin","A worker eats or drinks contaminated food or beverages","A worker is injected with chemicals"],a:2,e:"Ingestion = swallowing contaminated food or drinks containing chemicals."},
+        {q:"Workers who handle money or work alone at night face higher risk of:",opts:["Ergonomic hazards","Biological hazards","Workplace violence","Chemical exposure"],a:2,e:"Money handlers and solo/late-night workers face higher risk of workplace violence."},
+      ],
+      hard:[
+        {q:"A painter works in a confined space with poor ventilation for 8 hours daily. Identify ALL hazards:",opts:["Chemical (inhalation of fumes) only","Chemical (inhalation) + Physical (confined space) + Ergonomic (prolonged awkward posture)","Biological only","Mechanical only"],a:1,e:"Multiple hazards: Chemical (solvent fumes via inhalation), Physical (confined space risks), Ergonomic (awkward painting postures)."},
+        {q:"A worker experiences dizziness immediately after entering a room. The exposure route is MOST LIKELY:",opts:["Ingestion (ate contaminated food earlier)","Absorption (touched something)","Inhalation (airborne chemicals in the room)","All routes equally"],a:2,e:"Immediate symptoms upon entering a room = inhalation is most likely (airborne chemical immediately affects respiratory system)."},
+        {q:"To prevent falls from height, in the hierarchy the BEST control is:",opts:["Provide harnesses (PPE)","Install warning signs (Administrative)","Install guardrails/barriers (Engineering)","Remove working at height entirely (Elimination)"],a:3,e:"Elimination (remove the need to work at height) is the most effective. If not possible, Engineering (guardrails) is next."},
+        {q:"A construction worker exposed to 90dB+ noise for 15 years without hearing protection. Expected outcome:",opts:["No effect — the body adapts","Gradual irreversible hearing damage accumulated over years","Immediate total hearing loss","Temporary hearing loss that recovers"],a:1,e:"15 years of high noise without protection = severe gradual, irreversible accumulated hearing damage."},
+        {q:"Best combination of measures to control violence in a hospital emergency department?",opts:["Only physical barriers","Only security cameras","Training + security presence + reporting systems + adjusting patient flow","Reducing staff only"],a:2,e:"Comprehensive approach: training, security presence, reporting systems, and process changes (reducing wait times)."},
+        {q:"A fire starts in a server room containing electrical equipment. The CORRECT extinguisher is:",opts:["Water — it's the most common","CO₂ — suitable for electrical fires","Foam — most versatile","Sand only"],a:1,e:"Electrical fires (Class C) require CO₂ extinguisher — water conducts electricity and causes electrocution."},
+        {q:"A new employee is constantly humiliated and denied training given to others. This constitutes:",opts:["Normal workplace challenge","Physical hazard","Psychosocial hazard — workplace harassment/bullying","Chemical hazard"],a:2,e:"Persistent humiliation and unfair withholding of development opportunities = workplace harassment (psychosocial hazard)."},
+        {q:"A worker absorbs a chemical through a cut on their hand. The correct term and prevention are:",opts:["Inhalation — wear a respirator","Ingestion — avoid eating at work","Absorption (الامتصاص) — wear chemical-resistant gloves and keep wounds covered","Injection — seek medical attention"],a:2,e:"Absorption (الامتصاص) through cuts = wear chemical-resistant gloves, keep wounds covered, and prevent skin contact."},
+        {q:"An office worker uses a computer 10 hours daily for 5 years without ergonomic setup. MOST LIKELY injuries?",opts:["Chemical burns","Falls from height","Upper limb disorders (RSI) + spinal injuries (poor posture) + eye strain (screen)","Noise-induced hearing loss"],a:2,e:"Prolonged computer use: RSI/upper limb disorders, spinal injuries from poor posture, and eye strain."},
+        {q:"To prevent chemical exposure through ALL THREE routes simultaneously, a worker should use:",opts:["Respirator only (inhalation)","Gloves only (absorption)","Respirator (inhalation) + Gloves (absorption) + hygiene practices (ingestion)","Safety goggles only"],a:2,e:"Respirator prevents inhalation, gloves prevent absorption, hygiene practices (no food/drink at workstation) prevent ingestion."},
+        {q:"The 4th element of fire (Chain Reaction) means practically:",opts:["Fire needs 4 elements minimum to start","Modern fire extinguishers (dry powder) target the chain reaction directly","Chain reaction is irrelevant to fire fighting","Fire cannot be extinguished by removing fuel"],a:1,e:"Modern dry powder extinguishers specifically work by breaking the chain reaction."},
+        {q:"A worker reports noise level is too high to communicate at 5 meters — beyond the 2-meter rule. What action?",opts:["No action needed","Monitor only","Immediate noise control measures are required — the 2-meter threshold was exceeded","Only PPE is required"],a:2,e:"The 2-meter rule is the TRIGGER point. At 5 meters, noise severely exceeds the threshold — immediate controls required."},
+        {q:"Harassment causes high staff turnover, absenteeism, and reduced productivity. These are consequences of which hazard, and what cost category?",opts:["Physical hazard — direct costs","Chemical hazard — direct costs","Psychosocial hazard (harassment) — indirect costs (hidden)","Mechanical hazard — direct costs"],a:2,e:"Harassment = psychosocial hazard. Turnover, absenteeism, reduced productivity = indirect costs."},
+        {q:"A worker with a deep cut handles chemicals without gloves. Which exposure route is MOST immediately dangerous?",opts:["Inhalation","Ingestion","Absorption — open wound allows direct chemical entry into bloodstream","All routes equal"],a:2,e:"Open wounds dramatically increase absorption risk — chemicals can enter directly into the bloodstream."},
+        {q:"(A) Noise 85dB for 1 hour. (B) Explosion at 140dB instantly. Which causes which type of damage?",opts:["Both cause gradual damage","Both cause immediate damage","A = gradual accumulated damage over time; B = immediate total hearing loss","A = immediate damage; B = gradual damage"],a:2,e:"Prolonged moderate noise (A) = gradual accumulated irreversible damage. Sudden extreme noise (B) = immediate total hearing loss."},
+        {q:"A delivery worker is threatened by a customer. The employer's BEST preventive measure would have been:",opts:["Send workers alone without phones","No measures needed — violence is the worker's personal problem","Training + communication device + check-in protocols","Reduce delivery staff to save money"],a:2,e:"Best preventive measures for high-risk solo workers: training, communication devices, and check-in protocols."},
+      ]
+    }
+  }
+];
+
+// ══════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════
+let currentLecture = null;
+let currentLevel = null;
+let currentMode = 'quiz'; // quiz | timed | study
+let currentQuestions = [];
+let currentQ = 0;
+let correctCount = 0;
+let wrongCount = 0;
+let skippedCount = 0;
+let answered = false;
+let answerLog = []; // {q, opts, a, chosen, e}
+
+// Timed
+let timerInterval = null;
+const TIMER_SECONDS = 30;
+let timeLeft = TIMER_SECONDS;
+
+// Study mode
+let studyIdx = 0;
+let studyKnown = 0;
+let studyFlipped = false;
+
+// ══════════════════════════════════════════════════
+//  LOCAL STORAGE
+// ══════════════════════════════════════════════════
+function getHistory() {
+  try { return JSON.parse(localStorage.getItem('hse_history') || '{}'); } catch { return {}; }
+}
+function saveHistory(h) {
+  try { localStorage.setItem('hse_history', JSON.stringify(h)); } catch {}
+}
+function getBestScore(lecId, level) {
+  const h = getHistory();
+  const key = `${lecId}_${level}`;
+  return h[key] ? h[key].best : null;
+}
+function recordScore(lecId, level, mode, correct, total, questions) {
+  const h = getHistory();
+  const key = `${lecId}_${level}`;
+  const pct = Math.round((correct / total) * 100);
+  const existing = h[key];
+  const isNewBest = !existing || pct > existing.best;
+  if (!h[key]) h[key] = { best: 0, sessions: [] };
+  if (pct > h[key].best) h[key].best = pct;
+  h[key].sessions.unshift({
+    pct, correct, total, mode,
+    date: new Date().toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'2-digit' }),
+    time: new Date().toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' })
+  });
+  if (h[key].sessions.length > 10) h[key].sessions = h[key].sessions.slice(0, 10);
+  saveHistory(h);
+  return isNewBest;
+}
+
+// ══════════════════════════════════════════════════
+//  BUILD HOME CARDS
+// ══════════════════════════════════════════════════
+function buildCards() {
+  const grid = document.getElementById('cards-grid');
+  grid.innerHTML = LECTURES_DATA.map((l, i) => {
+    const bestE = getBestScore(l.id, 'easy');
+    const bestM = getBestScore(l.id, 'medium');
+    const bestH = getBestScore(l.id, 'hard');
+    const overallBest = [bestE, bestM, bestH].filter(b => b !== null);
+    const avgBest = overallBest.length ? Math.round(overallBest.reduce((a, b) => a + b, 0) / overallBest.length) : null;
+    return `
+    <div class="lec-card" onclick="selectLecture(${i})" style="animation-delay:${i * 0.05}s">
+      <div class="card-num">${String(i + 1).padStart(2, '0')}</div>
+      <div class="card-tag">${l.tag}</div>
+      <div class="card-title">${l.title}</div>
+      <div class="card-desc">${l.desc}</div>
+      <div class="card-meta">
+        <span class="meta-chip qs">50+ Questions</span>
+        <span class="meta-chip">3 Levels</span>
+        ${avgBest !== null ? `<span class="meta-chip best">Best: ${avgBest}%</span>` : ''}
+      </div>
+      <div class="card-arrow">→</div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════
+//  SCREENS
+// ══════════════════════════════════════════════════
+function showScreen(id) {
+  ['screen-home','screen-level','screen-quiz','screen-result','screen-review','screen-history'].forEach(s => {
+    const el = document.getElementById(s);
+    el.style.display = 'none';
+    el.style.flexDirection = '';
+  });
+  const target = document.getElementById(id);
+  target.style.display = 'flex';
+  target.style.flexDirection = 'column';
+  window.scrollTo(0, 0);
+}
+
+function showHome() { stopTimer(); buildCards(); showScreen('screen-home'); }
+function showLevel() { stopTimer(); showScreen('screen-level'); updateLevelBests(); }
+
+function selectLecture(idx) {
+  currentLecture = LECTURES_DATA[idx];
+  document.getElementById('level-lec-title').textContent = currentLecture.tag + ': ' + currentLecture.title;
+  document.getElementById('level-lec-sub').textContent = currentLecture.desc;
+  updateLevelBests();
+  showLevel();
+}
+
+function selectMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('mode-' + mode).classList.add('active');
+  updateLevelBests();
+}
+
+function updateLevelBests() {
+  if (!currentLecture) return;
+  ['easy', 'medium', 'hard'].forEach(lvl => {
+    const best = getBestScore(currentLecture.id, lvl);
+    const el = document.getElementById('lb-' + lvl);
+    const cnt = document.getElementById('lc-' + lvl);
+    const qCount = currentLecture.questions[lvl].length;
+    if (cnt) cnt.textContent = `${qCount} Questions`;
+    if (el) el.textContent = best !== null ? `Best: ${best}%` : '';
+  });
+}
+
+// ══════════════════════════════════════════════════
+//  QUIZ START
+// ══════════════════════════════════════════════════
+function startSession(level) {
+  currentLevel = level;
+  currentQuestions = [...currentLecture.questions[level]];
+  // Shuffle
+  for (let i = currentQuestions.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [currentQuestions[i], currentQuestions[j]] = [currentQuestions[j], currentQuestions[i]];
+  }
+  currentQ = 0;
+  correctCount = 0;
+  wrongCount = 0;
+  skippedCount = 0;
+  answered = false;
+  answerLog = [];
+
+  if (currentMode === 'study') { startStudyMode(); return; }
+
+  // Set header info
+  document.getElementById('quiz-lec-label').textContent = currentLecture.tag;
+  const badge = document.getElementById('quiz-level-badge');
+  const levelColors = { easy: '#00C853', medium: '#FFD600', hard: '#FF6659' };
+  badge.textContent = level.toUpperCase();
+  badge.style.background = levelColors[level] + '22';
+  badge.style.color = levelColors[level];
+  badge.style.border = `1px solid ${levelColors[level]}44`;
+
+  const modeBadge = document.getElementById('quiz-mode-badge');
+  const timerArea = document.getElementById('timer-area');
+  if (currentMode === 'timed') {
+    modeBadge.style.display = 'inline-flex';
+    timerArea.style.display = 'flex';
+  } else {
+    modeBadge.style.display = 'none';
+    timerArea.style.display = 'none';
+  }
+
+  document.getElementById('progress-total').textContent = 'of ' + currentQuestions.length;
+  document.getElementById('live-correct').textContent = '0';
+  document.getElementById('live-wrong').textContent = '0';
+
+  showScreen('screen-quiz');
+  renderQuestion();
+}
+
+function retryQuiz() { startSession(currentLevel); }
+
+// ══════════════════════════════════════════════════
+//  TIMER
+// ══════════════════════════════════════════════════
+function startTimer() {
+  stopTimer();
+  timeLeft = TIMER_SECONDS;
+  updateTimerUI();
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimerUI();
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      handleTimeout();
+    }
+  }, 1000);
+}
+
+function stopTimer() {
+  clearInterval(timerInterval);
+  timerInterval = null;
+}
+
+function updateTimerUI() {
+  const num = document.getElementById('timer-num');
+  const fill = document.getElementById('timer-fill');
+  if (!num || !fill) return;
+  const circumference = 113;
+  const pct = timeLeft / TIMER_SECONDS;
+  const offset = circumference * (1 - pct);
+  fill.style.strokeDashoffset = offset;
+  num.textContent = timeLeft;
+  const color = timeLeft > 15 ? '#FFD600' : timeLeft > 7 ? '#FF6D00' : '#FF6659';
+  fill.style.stroke = color;
+  num.style.color = color;
+}
+
+function handleTimeout() {
+  if (answered) return;
+  answered = true;
+  skippedCount++;
+  const q = currentQuestions[currentQ];
+  // Log as skipped
+  answerLog.push({ q: q.q, opts: q.opts, a: q.a, chosen: -1, e: q.e });
+  // Flash the q-card
+  const qCard = document.querySelector('.q-card');
+  if (qCard) qCard.classList.add('timeout-flash');
+  // Lock all options and show correct
+  q.opts.forEach((_, i) => {
+    const btn = document.getElementById('opt-' + i);
+    if (!btn) return;
+    btn.classList.add('locked');
+    if (i === q.a) btn.classList.add('show-ans');
+  });
+  const exBox = document.getElementById('explain-box');
+  const exText = document.getElementById('explain-text');
+  if (exBox && exText) {
+    exBox.style.borderLeftColor = '#FFD600';
+    exText.innerHTML = `<strong style="color:#FFD600">⏱ Time's up!</strong> — ${q.e}`;
+    exBox.classList.add('show');
+  }
+  const nextBtn = document.getElementById('next-btn');
+  if (nextBtn) nextBtn.classList.add('show');
+  document.getElementById('live-wrong').textContent = wrongCount;
+}
+
+// ══════════════════════════════════════════════════
+//  RENDER QUESTION (Quiz Mode)
+// ══════════════════════════════════════════════════
+function renderQuestion() {
+  answered = false;
+  const q = currentQuestions[currentQ];
+  const total = currentQuestions.length;
+  const pct = Math.round((currentQ / total) * 100);
+
+  document.getElementById('progress-text').textContent = 'Question ' + (currentQ + 1);
+  document.getElementById('progress-fill').style.width = pct + '%';
+
+  const body = document.getElementById('quiz-body');
+  body.innerHTML = `
+    <div class="q-card">
+      <div class="q-category">${currentLecture.tag} · ${currentLevel.toUpperCase()}</div>
+      <div class="q-text">${q.q}</div>
+    </div>
+    <div class="options-grid">
+      ${q.opts.map((opt, i) => `
+        <button class="opt-btn" id="opt-${i}" onclick="selectAnswer(${i})">
+          <span class="opt-letter">${String.fromCharCode(65 + i)}</span>
+          <span>${opt}</span>
+        </button>
+      `).join('')}
+    </div>
+    <div class="explain-box" id="explain-box">
+      <div class="ex-label">EXPLANATION</div>
+      <div id="explain-text"></div>
+    </div>
+    <button class="next-btn" id="next-btn" onclick="nextQuestion()">
+      ${currentQ < currentQuestions.length - 1 ? 'NEXT QUESTION →' : 'SEE RESULTS →'}
+    </button>
+  `;
+
+  if (currentMode === 'timed') startTimer();
+}
+
+function selectAnswer(chosen) {
+  if (answered) return;
+  answered = true;
+  stopTimer();
+  const q = currentQuestions[currentQ];
+  const isCorrect = chosen === q.a;
+
+  answerLog.push({ q: q.q, opts: q.opts, a: q.a, chosen, e: q.e });
+
+  if (isCorrect) { correctCount++; }
+  else { wrongCount++; }
+
+  document.getElementById('live-correct').textContent = correctCount;
+  document.getElementById('live-wrong').textContent = wrongCount;
+
+  q.opts.forEach((_, i) => {
+    const btn = document.getElementById('opt-' + i);
+    btn.classList.add('locked');
+    if (i === q.a) btn.classList.add('show-ans');
+    else if (i === chosen && chosen !== q.a) btn.classList.add('wrong');
+  });
+
+  const exBox = document.getElementById('explain-box');
+  const exText = document.getElementById('explain-text');
+  const icon = isCorrect ? '✓ Correct!' : '✗ Incorrect';
+  const color = isCorrect ? '#00C853' : '#FF6659';
+  exBox.style.borderLeftColor = color;
+  exText.innerHTML = `<strong style="color:${color}">${icon}</strong> — ${q.e}`;
+  exBox.classList.add('show');
+
+  document.getElementById('next-btn').classList.add('show');
+}
+
+function nextQuestion() {
+  currentQ++;
+  if (currentQ >= currentQuestions.length) {
+    showResults();
+  } else {
+    renderQuestion();
+    window.scrollTo(0, 0);
+  }
+}
+
+function confirmBack() {
+  stopTimer();
+  if (currentQ > 0) {
+    if (!confirm('Quit this quiz? Your progress will be lost.')) {
+      if (currentMode === 'timed' && !answered) startTimer();
+      return;
+    }
+  }
+  showLevel();
+}
+
+// ══════════════════════════════════════════════════
+//  RESULTS
+// ══════════════════════════════════════════════════
+function showResults() {
+  stopTimer();
+  const total = currentQuestions.length;
+  const pct = Math.round((correctCount / total) * 100);
+  const circumference = 427;
+  const offset = circumference - (pct / 100) * circumference;
+
+  const ringColor = pct >= 80 ? '#00C853' : pct >= 60 ? '#FFD600' : pct >= 40 ? '#FF6D00' : '#FF6659';
+
+  document.getElementById('ring-fill').style.stroke = ringColor;
+  document.getElementById('ring-fill').style.strokeDashoffset = circumference;
+  document.getElementById('res-pct').style.color = ringColor;
+
+  const grade = pct >= 90 ? 'A+ OUTSTANDING' : pct >= 80 ? 'A EXCELLENT' : pct >= 70 ? 'B VERY GOOD' : pct >= 60 ? 'C GOOD' : pct >= 50 ? 'D PASS' : 'F NEEDS WORK';
+  const msg = pct >= 90 ? 'Incredible! You have truly mastered this lecture.' : pct >= 80 ? 'Excellent work! You are well prepared for the exam.' : pct >= 70 ? 'Good understanding — review the questions you missed.' : pct >= 60 ? 'Solid effort — focus on the topics you struggled with.' : pct >= 50 ? 'You passed, but more practice is needed.' : 'Keep studying — revisit the lecture material and try again.';
+
+  document.getElementById('res-pct').textContent = pct + '%';
+  document.getElementById('res-score').textContent = correctCount + '/' + total;
+  document.getElementById('res-grade').textContent = grade;
+  document.getElementById('res-grade').style.color = ringColor;
+  document.getElementById('res-msg').textContent = msg;
+  document.getElementById('rs-correct').textContent = correctCount;
+  document.getElementById('rs-wrong').textContent = wrongCount;
+  document.getElementById('rs-skipped').textContent = skippedCount;
+  document.getElementById('rs-total').textContent = total;
+
+  // Save & check best
+  const isNewBest = recordScore(currentLecture.id, currentLevel, currentMode, correctCount, total, answerLog);
+  const bestBadge = document.getElementById('new-best-badge');
+  if (isNewBest && pct >= 50) {
+    bestBadge.classList.remove('hidden');
+    if (pct >= 80) launchConfetti(ringColor);
+  } else {
+    bestBadge.classList.add('hidden');
+  }
+
+  showScreen('screen-result');
+  setTimeout(() => {
+    document.getElementById('ring-fill').style.strokeDashoffset = offset;
+  }, 200);
+}
+
+// ══════════════════════════════════════════════════
+//  REVIEW
+// ══════════════════════════════════════════════════
+function showReview() {
+  const body = document.getElementById('review-body');
+  const correct = answerLog.filter(l => l.chosen === l.a).length;
+  document.getElementById('review-sub').textContent = `${correct}/${answerLog.length} correct · ${currentLecture.tag} ${currentLevel.toUpperCase()}`;
+
+  body.innerHTML = answerLog.map((log, idx) => {
+    const isCorrect = log.chosen === log.a;
+    const isSkipped = log.chosen === -1;
+    const tagClass = isSkipped ? 'tag-skipped' : isCorrect ? 'tag-correct' : 'tag-wrong';
+    const tagText = isSkipped ? '⏱ TIMED OUT' : isCorrect ? '✓ CORRECT' : '✗ INCORRECT';
+    const optsHtml = log.opts.map((opt, i) => {
+      let cls = 'plain';
+      if (i === log.a) cls = 'correct-ans';
+      else if (i === log.chosen) cls = 'user-wrong';
+      const prefix = i === log.a ? '✓ ' : (i === log.chosen && log.chosen !== log.a ? '✗ ' : '');
+      return `<div class="review-opt ${cls}"><span>${String.fromCharCode(65 + i)}.</span> ${prefix}${opt}</div>`;
+    }).join('');
+
+    return `
+      <div class="review-q" style="animation-delay:${idx * 0.03}s">
+        <div class="review-tag ${tagClass}">Q${idx + 1} — ${tagText}</div>
+        <div class="review-q-text">${log.q}</div>
+        <div class="review-opts">${optsHtml}</div>
+        <div class="review-explain">${log.e}</div>
+      </div>`;
+  }).join('');
+
+  showScreen('screen-review');
+}
+
+// ══════════════════════════════════════════════════
+//  STUDY MODE (Flashcards)
+// ══════════════════════════════════════════════════
+function startStudyMode() {
+  studyIdx = 0;
+  studyKnown = 0;
+  studyFlipped = false;
+
+  document.getElementById('quiz-lec-label').textContent = currentLecture.tag;
+  const badge = document.getElementById('quiz-level-badge');
+  const levelColors = { easy: '#00C853', medium: '#FFD600', hard: '#FF6659' };
+  badge.textContent = currentLevel.toUpperCase();
+  badge.style.background = levelColors[currentLevel] + '22';
+  badge.style.color = levelColors[currentLevel];
+  badge.style.border = `1px solid ${levelColors[currentLevel]}44`;
+
+  document.getElementById('quiz-mode-badge').style.display = 'inline-flex';
+  document.getElementById('quiz-mode-badge').textContent = '📖 STUDY';
+  document.getElementById('timer-area').style.display = 'none';
+
+  document.getElementById('progress-total').textContent = 'of ' + currentQuestions.length;
+
+  showScreen('screen-quiz');
+  renderFlashcard();
+}
+
+function renderFlashcard() {
+  studyFlipped = false;
+  const q = currentQuestions[studyIdx];
+  const total = currentQuestions.length;
+  const pct = Math.round((studyIdx / total) * 100);
+
+  document.getElementById('progress-text').textContent = 'Card ' + (studyIdx + 1);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('live-correct').textContent = studyKnown;
+  document.getElementById('live-wrong').style.display = 'none';
+
+  const body = document.getElementById('quiz-body');
+  body.innerHTML = `
+    <div class="fc-counter">${studyIdx + 1} / ${total} · ${studyKnown} known</div>
+    <div class="flashcard-wrap" id="flashcard-wrap" onclick="flipCard()">
+      <div class="flashcard" id="flashcard">
+        <div class="flashcard-front">
+          <div class="fc-label" style="color:var(--red-light)">QUESTION</div>
+          <div class="fc-q">${q.q}</div>
+          <div class="fc-hint">Tap to reveal answer →</div>
+        </div>
+        <div class="flashcard-back">
+          <div class="fc-label" style="color:var(--green)">ANSWER</div>
+          <div class="fc-a"><strong style="color:var(--green)">${q.opts[q.a]}</strong></div>
+          <div style="margin-top:0.8rem;font-size:0.78rem;color:var(--text2);line-height:1.5">${q.e}</div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-nav" id="fc-nav" style="display:none">
+      <button class="fc-btn skip" onclick="fcNext(false)">← Still Learning</button>
+      <button class="fc-btn know" onclick="fcNext(true)">Got It ✓</button>
+    </div>
+  `;
+}
+
+function flipCard() {
+  if (studyFlipped) return;
+  studyFlipped = true;
+  document.getElementById('flashcard').classList.add('flipped');
+  document.getElementById('fc-nav').style.display = 'flex';
+}
+
+function fcNext(known) {
+  if (known) studyKnown++;
+  studyIdx++;
+  if (studyIdx >= currentQuestions.length) {
+    // Study complete — show results style
+    correctCount = studyKnown;
+    wrongCount = currentQuestions.length - studyKnown;
+    skippedCount = 0;
+    answerLog = currentQuestions.map(q => ({q: q.q, opts: q.opts, a: q.a, chosen: q.a, e: q.e}));
+    showResults();
+  } else {
+    renderFlashcard();
+  }
+}
+
+// ══════════════════════════════════════════════════
+//  HISTORY
+// ══════════════════════════════════════════════════
+function showHistory() {
+  const h = getHistory();
+  const body = document.getElementById('history-body');
+
+  const hasData = Object.keys(h).length > 0;
+  if (!hasData) {
+    body.innerHTML = `<div class="history-empty">No quiz sessions yet.<br>Complete a quiz to see your scores here!</div>`;
+    showScreen('screen-history');
+    return;
+  }
+
+  let html = '';
+  LECTURES_DATA.forEach(lec => {
+    const keys = ['easy', 'medium', 'hard'].filter(lvl => h[`${lec.id}_${lvl}`]);
+    if (!keys.length) return;
+
+    html += `<div class="history-lec-block"><div class="history-lec-name">${lec.tag}: ${lec.title}</div><div class="history-grid">`;
+    keys.forEach(lvl => {
+      const data = h[`${lec.id}_${lvl}`];
+      const latest = data.sessions[0];
+      const color = lvl === 'easy' ? 'var(--green)' : lvl === 'medium' ? 'var(--yellow)' : 'var(--red-light)';
+      html += `
+        <div class="history-card ${lvl}">
+          <div class="history-level">${lvl.toUpperCase()}</div>
+          <div class="history-score-big" style="color:${color}">${data.best}%</div>
+          <div class="history-frac">Best score · ${latest.correct}/${latest.total}</div>
+          <div class="history-date">${latest.date} at ${latest.time}</div>
+          <div class="history-mode-tag">${latest.mode || 'quiz'} mode · ${data.sessions.length} session${data.sessions.length !== 1 ? 's' : ''}</div>
+        </div>`;
+    });
+    html += `</div></div>`;
+  });
+
+  body.innerHTML = html;
+  showScreen('screen-history');
+}
+
+function clearHistory() {
+  if (confirm('Clear all score history? This cannot be undone.')) {
+    try { localStorage.removeItem('hse_history'); } catch {}
+    showToast('History cleared');
+    showHistory();
+  }
+}
+
+// ══════════════════════════════════════════════════
+//  CONFETTI
+// ══════════════════════════════════════════════════
+function launchConfetti(color) {
+  const canvas = document.getElementById('confetti-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const particles = Array.from({ length: 80 }, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * -100,
+    w: Math.random() * 10 + 5,
+    h: Math.random() * 6 + 3,
+    r: Math.random() * Math.PI * 2,
+    vx: (Math.random() - 0.5) * 3,
+    vy: Math.random() * 3 + 2,
+    vr: (Math.random() - 0.5) * 0.2,
+    color: [color, '#FFD600', '#FF6659', '#F0F0F0', '#448AFF'][Math.floor(Math.random() * 5)],
+    opacity: 1
+  }));
+
+  let frame = 0;
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.r += p.vr;
+      p.vy += 0.05;
+      if (p.y > canvas.height) p.opacity -= 0.05;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.r);
+      ctx.globalAlpha = Math.max(0, p.opacity);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+    });
+    frame++;
+    if (frame < 180) requestAnimationFrame(animate);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  animate();
+}
+
+// ══════════════════════════════════════════════════
+//  TOAST
+// ══════════════════════════════════════════════════
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ══════════════════════════════════════════════════
+//  SWIPE GESTURES (mobile)
+// ══════════════════════════════════════════════════
+let touchStartX = 0;
+document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+document.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(dx) < 60) return;
+  // Swipe left on flashcard = still learning
+  if (currentMode === 'study' && studyFlipped) {
+    if (dx < 0) fcNext(false);
+    else fcNext(true);
+  }
+}, { passive: true });
+
+// ══════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════
+buildCards();
+</script>
+</body>
+</html>
